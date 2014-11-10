@@ -1,4 +1,4 @@
-obj-m := record-example.o
+obj-m := dma-example.o
 KERNELDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 
