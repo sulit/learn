@@ -1,0 +1,151 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+IN_FILES	poll_t.c	12;"	d	file:
+MAX	poll_t.c	14;"	d	file:
+MAX_BUFFER_SIZE	poll_t.c	11;"	d	file:
+SOL_TCP	uhttpd.h	41;"	d
+TIME_DELAY	poll_t.c	13;"	d	file:
+UH_HTTP_MSG_GET	uhttpd.h	50;"	d
+UH_HTTP_MSG_HEAD	uhttpd.h	51;"	d
+UH_HTTP_MSG_POST	uhttpd.h	52;"	d
+UH_LIMIT_CLIENTS	uhttpd.h	48;"	d
+UH_LIMIT_HEADERS	uhttpd.h	46;"	d
+UH_LIMIT_MSGHEAD	uhttpd.h	45;"	d
+_BSD_SOURCE	uhttpd-file.c	20;"	d	file:
+_BSD_SOURCE	uhttpd-utils.c	20;"	d	file:
+_XOPEN_SOURCE	uhttpd-file.c	19;"	d	file:
+_XOPEN_SOURCE	uhttpd-utils.c	19;"	d	file:
+_XOPEN_SOURCE	uhttpd.c	19;"	d	file:
+addr	uhttpd.h	/^	struct sockaddr_in6 addr;$/;"	m	struct:listener	typeref:struct:listener::sockaddr_in6
+array_size	uhttpd-utils.h	30;"	d
+auth_realm	uhttpd.h	/^struct auth_realm {$/;"	s
+canonpath	uhttpd-utils.c	/^static char * canonpath(const char *path, char *path_resolved)$/;"	f	file:
+client	uhttpd.h	/^struct client {$/;"	s
+conf	uhttpd.h	/^	struct config *conf;$/;"	m	struct:listener	typeref:struct:listener::config
+config	uhttpd.h	/^struct config {$/;"	s
+docroot	uhttpd.h	/^	char docroot[PATH_MAX];$/;"	m	struct:config
+ensure_out	uhttpd-utils.h	39;"	d
+ensure_ret	uhttpd-utils.h	42;"	d
+error_handler	uhttpd.h	/^	char *error_handler;$/;"	m	struct:config
+extn	uhttpd-file.h	/^	const char *extn;$/;"	m	struct:mimetype
+fd_cloexec	uhttpd-utils.h	36;"	d
+file	uhttpd.h	/^	char *file;$/;"	m	struct:config
+foreach_header	uhttpd-utils.h	33;"	d
+headers	uhttpd.h	/^	char *headers[UH_LIMIT_HEADERS];$/;"	m	struct:http_request
+headers	uhttpd.h	/^	char *headers[UH_LIMIT_HEADERS];$/;"	m	struct:http_response
+hex	uhttpd-utils.c	313;"	d	file:
+http_request	uhttpd.h	/^struct http_request {$/;"	s
+http_response	uhttpd.h	/^struct http_response {$/;"	s
+index_file	uhttpd.h	/^	char *index_file;$/;"	m	struct:config
+info	uhttpd-utils.h	/^	char *info;$/;"	m	struct:path_info
+listener	uhttpd.h	/^struct listener {$/;"	s
+main	fd_set_test.c	/^int main(int argc, char **argv){$/;"	f
+main	fd_set_test2.c	/^main(void)$/;"	f
+main	mygetopt.c	/^int main(int argc,char *argv[])$/;"	f
+main	mygetopt2.c	/^main(int argc, char *argv[])$/;"	f
+main	mygetopt3.c	/^main(int argc, char **argv)$/;"	f
+main	mystrrch.c	/^int main(void)$/;"	f
+main	poll_t.c	/^int main(int argc ,char **argv)$/;"	f
+main	test.c	/^int main(void)$/;"	f
+main	uhttpd.c	/^int main (int argc, char **argv)$/;"	f
+max	uhttpd-utils.h	28;"	d
+method	uhttpd.h	/^	int	method;$/;"	m	struct:http_request
+mime	uhttpd-file.h	/^	const char *mime;$/;"	m	struct:mimetype
+mimetype	uhttpd-file.h	/^struct mimetype {$/;"	s
+min	uhttpd-utils.h	27;"	d
+name	uhttpd-utils.h	/^	char *name;$/;"	m	struct:path_info
+network_timeout	uhttpd.h	/^	int network_timeout;$/;"	m	struct:config
+next	uhttpd.h	/^	struct auth_realm *next;$/;"	m	struct:auth_realm	typeref:struct:auth_realm::auth_realm
+next	uhttpd.h	/^	struct client *next;$/;"	m	struct:client	typeref:struct:client::client
+next	uhttpd.h	/^	struct listener *next;$/;"	m	struct:listener	typeref:struct:listener::listener
+no_dirlists	uhttpd.h	/^	int no_dirlists;$/;"	m	struct:config
+no_symlinks	uhttpd.h	/^	int no_symlinks;$/;"	m	struct:config
+pass	uhttpd.h	/^	char pass[128];$/;"	m	struct:auth_realm
+path	uhttpd.h	/^	char path[PATH_MAX];$/;"	m	struct:auth_realm
+path_info	uhttpd-utils.h	/^struct path_info {$/;"	s
+peekbuf	uhttpd.h	/^	char peekbuf[UH_LIMIT_MSGHEAD];$/;"	m	struct:client
+peeklen	uhttpd.h	/^	int peeklen;$/;"	m	struct:client
+peeraddr	uhttpd.h	/^	struct sockaddr_in6 peeraddr;$/;"	m	struct:client	typeref:struct:client::sockaddr_in6
+phys	uhttpd-utils.h	/^	char *phys;$/;"	m	struct:path_info
+query	uhttpd-utils.h	/^	char *query;$/;"	m	struct:path_info
+realm	uhttpd.h	/^	char *realm;$/;"	m	struct:config
+realm	uhttpd.h	/^	struct auth_realm *realm;$/;"	m	struct:http_request	typeref:struct:http_request::auth_realm
+redirect_status	uhttpd.h	/^	int redirect_status;$/;"	m	struct:http_request
+redirected	uhttpd-utils.h	/^	int redirected;$/;"	m	struct:path_info
+rfc1918_filter	uhttpd.h	/^	int rfc1918_filter;$/;"	m	struct:config
+root	uhttpd-utils.h	/^	char *root;$/;"	m	struct:path_info
+run	uhttpd.c	/^static int run = 1;$/;"	v	file:
+sa_port	uhttpd-utils.c	/^int sa_port(void *sa)$/;"	f
+sa_rfc1918	uhttpd-utils.c	/^int sa_rfc1918(void *sa)$/;"	f
+sa_straddr	uhttpd-utils.c	/^const char * sa_straddr(void *sa)$/;"	f
+sa_strport	uhttpd-utils.c	/^const char * sa_strport(void *sa)$/;"	f
+select_intr	uhttpd-utils.c	/^int select_intr(int n, fd_set *r, fd_set *w, fd_set *e, struct timeval *t)$/;"	f
+servaddr	uhttpd.h	/^	struct sockaddr_in6 servaddr;$/;"	m	struct:client	typeref:struct:client::sockaddr_in6
+server	uhttpd.h	/^	struct listener *server;$/;"	m	struct:client	typeref:struct:client::listener
+socket	uhttpd.h	/^	int socket;$/;"	m	struct:client
+socket	uhttpd.h	/^	int socket;$/;"	m	struct:listener
+stat	uhttpd-utils.h	/^	struct stat stat;$/;"	m	struct:path_info	typeref:struct:path_info::stat
+statuscode	uhttpd.h	/^	int statuscode;$/;"	m	struct:http_response
+statusmsg	uhttpd.h	/^	char *statusmsg;$/;"	m	struct:http_response
+strfind	uhttpd-utils.c	/^char *strfind(char *haystack, int hslen, const char *needle, int ndlen)$/;"	f
+tcp_keepalive	uhttpd.h	/^	int tcp_keepalive;$/;"	m	struct:config
+uh_auth_add	uhttpd-utils.c	/^struct auth_realm * uh_auth_add(char *path, char *user, char *pass)$/;"	f
+uh_auth_check	uhttpd-utils.c	/^int uh_auth_check($/;"	f
+uh_b64decode	uhttpd-utils.c	/^int uh_b64decode(char *buf, int blen, const unsigned char *src, int slen)$/;"	f
+uh_client_add	uhttpd-utils.c	/^struct client * uh_client_add(int sock, struct listener *serv)$/;"	f
+uh_client_lookup	uhttpd-utils.c	/^struct client * uh_client_lookup(int sock)$/;"	f
+uh_client_remove	uhttpd-utils.c	/^void uh_client_remove(int sock)$/;"	f
+uh_clients	uhttpd-utils.c	/^static struct client *uh_clients = NULL;$/;"	v	typeref:struct:client	file:
+uh_config_parse	uhttpd.c	/^static void uh_config_parse(struct config *conf)$/;"	f	file:
+uh_dispatch_request	uhttpd.c	/^static void uh_dispatch_request($/;"	f	file:
+uh_file_date2unix	uhttpd-file.c	/^static time_t uh_file_date2unix(const char *date)$/;"	f	file:
+uh_file_dirlist	uhttpd-file.c	/^static void uh_file_dirlist(struct client *cl, struct http_request *req, struct path_info *pi)$/;"	f	file:
+uh_file_header_lookup	uhttpd-file.c	/^static char * uh_file_header_lookup(struct http_request *req, const char *name)$/;"	f	file:
+uh_file_if_match	uhttpd-file.c	/^static int uh_file_if_match(struct client *cl, struct http_request *req, struct stat *s, int *ok)$/;"	f	file:
+uh_file_if_modified_since	uhttpd-file.c	/^static int uh_file_if_modified_since(struct client *cl, struct http_request *req, struct stat *s, int *ok)$/;"	f	file:
+uh_file_if_none_match	uhttpd-file.c	/^static int uh_file_if_none_match(struct client *cl, struct http_request *req, struct stat *s, int *ok)$/;"	f	file:
+uh_file_if_range	uhttpd-file.c	/^static int uh_file_if_range(struct client *cl, struct http_request *req, struct stat *s, int *ok)$/;"	f	file:
+uh_file_if_unmodified_since	uhttpd-file.c	/^static int uh_file_if_unmodified_since(struct client *cl, struct http_request *req, struct stat *s, int *ok)$/;"	f	file:
+uh_file_mime_lookup	uhttpd-file.c	/^static const char * uh_file_mime_lookup(const char *path)$/;"	f	file:
+uh_file_mktag	uhttpd-file.c	/^static const char * uh_file_mktag(struct stat *s)$/;"	f	file:
+uh_file_request	uhttpd-file.c	/^void uh_file_request(struct client *cl, struct http_request *req, struct path_info *pi)$/;"	f
+uh_file_response_200	uhttpd-file.c	/^static int uh_file_response_200(struct client *cl, struct http_request *req, struct stat *s)$/;"	f	file:
+uh_file_response_304	uhttpd-file.c	/^static int uh_file_response_304(struct client *cl, struct http_request *req, struct stat *s)$/;"	f	file:
+uh_file_response_412	uhttpd-file.c	/^static int uh_file_response_412(struct client *cl, struct http_request *req)$/;"	f	file:
+uh_file_response_ok_hdrs	uhttpd-file.c	/^static int uh_file_response_ok_hdrs(struct client *cl, struct http_request *req, struct stat *s)$/;"	f	file:
+uh_file_scandir_filter_dir	uhttpd-file.c	/^static int uh_file_scandir_filter_dir(const struct dirent *e)$/;"	f	file:
+uh_file_unix2date	uhttpd-file.c	/^static char * uh_file_unix2date(time_t ts)$/;"	f	file:
+uh_http_header_parse	uhttpd.c	/^static struct http_request * uh_http_header_parse(struct client *cl, char *buffer, int buflen)$/;"	f	file:
+uh_http_header_recv	uhttpd.c	/^static struct http_request * uh_http_header_recv(struct client *cl)$/;"	f	file:
+uh_http_response	uhttpd-utils.h	77;"	d
+uh_http_send	uhttpd-utils.c	/^int uh_http_send($/;"	f
+uh_http_sendc	uhttpd-utils.c	/^int uh_http_sendc(struct client *cl, const char *data, int len)$/;"	f
+uh_http_sendf	uhttpd-utils.c	/^int uh_http_sendf($/;"	f
+uh_http_sendhf	uhttpd-utils.c	/^int uh_http_sendhf(struct client *cl, int code, const char *summary, const char *fmt, ...)$/;"	f
+uh_index_files	uhttpd-utils.c	/^static char *uh_index_files[] = {$/;"	v	file:
+uh_interpreter_add	uhttpd-utils.c	/^struct interpreter * uh_interpreter_add(const char *extn, const char *path)$/;"	f
+uh_interpreter_lookup	uhttpd-utils.c	/^struct interpreter * uh_interpreter_lookup(const char *path)$/;"	f
+uh_interpreters	uhttpd-utils.c	/^static struct interpreter *uh_interpreters = NULL;$/;"	v	typeref:struct:interpreter	file:
+uh_listener_add	uhttpd-utils.c	/^struct listener * uh_listener_add(int sock, struct config *conf)$/;"	f
+uh_listener_lookup	uhttpd-utils.c	/^struct listener * uh_listener_lookup(int sock)$/;"	f
+uh_listeners	uhttpd-utils.c	/^static struct listener *uh_listeners = NULL;$/;"	v	typeref:struct:listener	file:
+uh_mainloop	uhttpd.c	/^static void uh_mainloop(struct config *conf, fd_set serv_fds, int max_fd)$/;"	f	file:
+uh_path_lookup	uhttpd-utils.c	/^struct path_info * uh_path_lookup(struct client *cl, const char *url)$/;"	f
+uh_realms	uhttpd-utils.c	/^static struct auth_realm *uh_realms = NULL;$/;"	v	typeref:struct:auth_realm	file:
+uh_sigchld	uhttpd.c	/^static void uh_sigchld(int sig)$/;"	f	file:
+uh_sigterm	uhttpd.c	/^static void uh_sigterm(int sig)$/;"	f	file:
+uh_socket_bind	uhttpd.c	/^static int uh_socket_bind($/;"	f	file:
+uh_tcp_peek	uhttpd-utils.c	/^int uh_tcp_peek(struct client *cl, char *buf, int len)$/;"	f
+uh_tcp_recv	uhttpd-utils.c	/^int uh_tcp_recv(struct client *cl, char *buf, int len)$/;"	f
+uh_tcp_recv_lowlevel	uhttpd-utils.c	/^int uh_tcp_recv_lowlevel(struct client *cl, char *buf, int len)$/;"	f
+uh_tcp_send	uhttpd-utils.c	/^int uh_tcp_send(struct client *cl, const char *buf, int len)$/;"	f
+uh_tcp_send_lowlevel	uhttpd-utils.c	/^int uh_tcp_send_lowlevel(struct client *cl, const char *buf, int len)$/;"	f
+uh_urldecode	uhttpd-utils.c	/^int uh_urldecode(char *buf, int blen, const char *src, int slen)$/;"	f
+uh_urlencode	uhttpd-utils.c	/^int uh_urlencode(char *buf, int blen, const char *src, int slen)$/;"	f
+url	uhttpd.h	/^	char *url;$/;"	m	struct:http_request
+user	uhttpd.h	/^	char user[32];$/;"	m	struct:auth_realm
+version	uhttpd.h	/^	float version;$/;"	m	struct:http_request
