@@ -8,9 +8,12 @@ int mygetchar(void);
 int
 main(int argc, char *argv[])
 {
-	while(mygetchar() != 'q')
+	int value = 0;
+	while(1)
 	{
-		printf("%d\n",mygetchar());
+		if ((value = mygetchar()) == EOF)
+		  break;
+		printf("%d\n",value);
 	}
 
 	return 0;
