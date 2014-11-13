@@ -11,8 +11,9 @@ main(int argc, char *argv[])
 	int value = 0;
 	while(1)
 	{
-		if ((value = mygetchar()) == EOF)
+		if ((value = mygetchar()) == EOF) // EOF is Ctrl + d
 		  break;
+		if (value != 10)
 		printf("%d\n",value);
 	}
 
