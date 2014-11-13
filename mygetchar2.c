@@ -9,6 +9,7 @@ int
 main(int argc, char *argv[])
 {
 	int value = 0;
+	printf("%d\n",BUFSIZ);
 	while(1)
 	{
 		if ((value = mygetchar()) == EOF) // EOF is Ctrl + d

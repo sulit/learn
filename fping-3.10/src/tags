@@ -1,0 +1,383 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ACLOCAL	Makefile	/^ACLOCAL = ${SHELL} \/home\/sulit\/mygitsrc\/fping-3.10\/missing aclocal-1.14$/;"	m
+ACLOCAL_M4	Makefile	/^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"	m
+AMTAR	Makefile	/^AMTAR = $${TAR-tar}$/;"	m
+AM_DEFAULT_VERBOSITY	Makefile	/^AM_DEFAULT_VERBOSITY = 1$/;"	m
+AM_V_CC	Makefile	/^AM_V_CC = $(am__v_CC_$(V))$/;"	m
+AM_V_CCLD	Makefile	/^AM_V_CCLD = $(am__v_CCLD_$(V))$/;"	m
+AM_V_GEN	Makefile	/^AM_V_GEN = $(am__v_GEN_$(V))$/;"	m
+AM_V_P	Makefile	/^AM_V_P = $(am__v_P_$(V))$/;"	m
+AM_V_at	Makefile	/^AM_V_at = $(am__v_at_$(V))$/;"	m
+AM_V_lt	Makefile	/^AM_V_lt = $(am__v_lt_$(V))$/;"	m
+AUTOCONF	Makefile	/^AUTOCONF = ${SHELL} \/home\/sulit\/mygitsrc\/fping-3.10\/missing autoconf$/;"	m
+AUTOHEADER	Makefile	/^AUTOHEADER = ${SHELL} \/home\/sulit\/mygitsrc\/fping-3.10\/missing autoheader$/;"	m
+AUTOMAKE	Makefile	/^AUTOMAKE = ${SHELL} \/home\/sulit\/mygitsrc\/fping-3.10\/missing automake-1.14$/;"	m
+AWK	Makefile	/^AWK = mawk$/;"	m
+CC	Makefile	/^CC = gcc$/;"	m
+CCDEPMODE	Makefile	/^CCDEPMODE = depmode=gcc3$/;"	m
+CCLD	Makefile	/^CCLD = $(CC)$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -g -O2$/;"	m
+COMPILE	Makefile	/^COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \\$/;"	m
+CONFIG_CLEAN_FILES	Makefile	/^CONFIG_CLEAN_FILES =$/;"	m
+CONFIG_CLEAN_VPATH_FILES	Makefile	/^CONFIG_CLEAN_VPATH_FILES =$/;"	m
+CONFIG_HEADER	Makefile	/^CONFIG_HEADER = $(top_builddir)\/config.h$/;"	m
+CPP	Makefile	/^CPP = gcc -E$/;"	m
+CPPFLAGS	Makefile	/^CPPFLAGS = $/;"	m
+CTAGS	Makefile	/^CTAGS = ctags$/;"	m
+CYGPATH_W	Makefile	/^CYGPATH_W = echo$/;"	m
+DBG_PRINT_PER_SYSTEM	fping.c	147;"	d	file:
+DBG_RANDOM_LOSE_FEW	fping.c	145;"	d	file:
+DBG_RANDOM_LOSE_MANY	fping.c	146;"	d	file:
+DBG_REPORT_ALL_RTTS	fping.c	148;"	d	file:
+DBG_SENT_TIMES	fping.c	144;"	d	file:
+DBG_TRACE	fping.c	143;"	d	file:
+DEFAULT_BACKOFF_FACTOR	options.h	44;"	d
+DEFAULT_INCLUDES	Makefile	/^DEFAULT_INCLUDES = -I. -I$(top_builddir)$/;"	m
+DEFAULT_INTERVAL	options.h	23;"	d
+DEFAULT_PERHOST_INTERVAL	options.h	27;"	d
+DEFAULT_PING_DATA_SIZE	fping.c	127;"	d	file:
+DEFAULT_RETRY	options.h	36;"	d
+DEFAULT_SELECT_TIME	options.h	40;"	d
+DEFAULT_TIMEOUT	options.h	31;"	d
+DEFS	Makefile	/^DEFS = -DHAVE_CONFIG_H$/;"	m
+DEPDIR	Makefile	/^DEPDIR = .deps$/;"	m
+DISTFILES	Makefile	/^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"	m
+DIST_COMMON	Makefile	/^DIST_COMMON = $(srcdir)\/Makefile.in $(srcdir)\/Makefile.am \\$/;"	m
+DIST_SOURCES	Makefile	/^DIST_SOURCES = $(fping_SOURCES) $(fping6_SOURCES)$/;"	m
+DNS_TIMEOUT	options.h	50;"	d
+ECHO_C	Makefile	/^ECHO_C = $/;"	m
+ECHO_N	Makefile	/^ECHO_N = -n$/;"	m
+ECHO_T	Makefile	/^ECHO_T = $/;"	m
+EGREP	Makefile	/^EGREP = \/bin\/grep -E$/;"	m
+EMAIL	fping.c	112;"	d	file:
+ETAGS	Makefile	/^ETAGS = etags$/;"	m
+EV_TYPE_PING	fping.c	199;"	d	file:
+EV_TYPE_TIMEOUT	fping.c	200;"	d	file:
+EXEEXT	Makefile	/^EXEEXT = $/;"	m
+FPING_ICMPHDR	fping.h	13;"	d
+FPING_ICMPHDR	fping.h	17;"	d
+FPING_INADDR	fping.h	12;"	d
+FPING_INADDR	fping.h	16;"	d
+FPING_SOCKADDR	fping.h	11;"	d
+FPING_SOCKADDR	fping.h	15;"	d
+GREP	Makefile	/^GREP = \/bin\/grep$/;"	m
+HOST_ENTRY	fping.c	/^} HOST_ENTRY;$/;"	t	typeref:struct:host_entry	file:
+ICMP_UNREACH_MAXTYPE	fping.c	195;"	d	file:
+INSTALL	Makefile	/^INSTALL = \/usr\/bin\/install -c$/;"	m
+INSTALL_DATA	Makefile	/^INSTALL_DATA = ${INSTALL} -m 644$/;"	m
+INSTALL_HEADER	Makefile	/^INSTALL_HEADER = $(INSTALL_DATA)$/;"	m
+INSTALL_PROGRAM	Makefile	/^INSTALL_PROGRAM = ${INSTALL}$/;"	m
+INSTALL_SCRIPT	Makefile	/^INSTALL_SCRIPT = ${INSTALL}$/;"	m
+INSTALL_STRIP_PROGRAM	Makefile	/^INSTALL_STRIP_PROGRAM = $(install_sh) -c -s$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS = $/;"	m
+LIBOBJS	Makefile	/^LIBOBJS = $/;"	m
+LIBS	Makefile	/^LIBS = $/;"	m
+LINK	Makefile	/^LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@$/;"	m
+LTLIBOBJS	Makefile	/^LTLIBOBJS = $/;"	m
+MAINT	Makefile	/^MAINT = #$/;"	m
+MAKEINFO	Makefile	/^MAKEINFO = ${SHELL} \/home\/sulit\/mygitsrc\/fping-3.10\/missing makeinfo$/;"	m
+MAX_BACKOFF_FACTOR	options.h	47;"	d
+MAX_COUNT	fping.c	130;"	d	file:
+MAX_IP_PACKET	fping.c	117;"	d	file:
+MAX_PING_DATA	fping.c	124;"	d	file:
+MAX_RETRY	fping.c	134;"	d	file:
+MIN_BACKOFF_FACTOR	options.h	46;"	d
+MIN_INTERVAL	fping.c	131;"	d	file:
+MIN_PERHOST_INTERVAL	fping.c	132;"	d	file:
+MIN_PING_DATA	fping.c	116;"	d	file:
+MIN_TIMEOUT	fping.c	133;"	d	file:
+MKDIR_P	Makefile	/^MKDIR_P = \/bin\/mkdir -p$/;"	m
+NORMAL_INSTALL	Makefile	/^NORMAL_INSTALL = :$/;"	m
+NORMAL_UNINSTALL	Makefile	/^NORMAL_UNINSTALL = :$/;"	m
+OBJEXT	Makefile	/^OBJEXT = o$/;"	m
+PACKAGE	Makefile	/^PACKAGE = fping$/;"	m
+PACKAGE_BUGREPORT	Makefile	/^PACKAGE_BUGREPORT = $/;"	m
+PACKAGE_NAME	Makefile	/^PACKAGE_NAME = fping$/;"	m
+PACKAGE_STRING	Makefile	/^PACKAGE_STRING = fping 3.10$/;"	m
+PACKAGE_TARNAME	Makefile	/^PACKAGE_TARNAME = fping$/;"	m
+PACKAGE_URL	Makefile	/^PACKAGE_URL = $/;"	m
+PACKAGE_VERSION	Makefile	/^PACKAGE_VERSION = 3.10$/;"	m
+PATH_SEPARATOR	Makefile	/^PATH_SEPARATOR = :$/;"	m
+POST_INSTALL	Makefile	/^POST_INSTALL = :$/;"	m
+POST_UNINSTALL	Makefile	/^POST_UNINSTALL = :$/;"	m
+PRE_INSTALL	Makefile	/^PRE_INSTALL = :$/;"	m
+PRE_UNINSTALL	Makefile	/^PRE_UNINSTALL = :$/;"	m
+PROGRAMS	Makefile	/^PROGRAMS = $(sbin_PROGRAMS)$/;"	m
+RESP_ERROR	fping.c	139;"	d	file:
+RESP_UNUSED	fping.c	138;"	d	file:
+RESP_WAITING	fping.c	137;"	d	file:
+SEQMAP_H	seqmap.h	2;"	d
+SEQMAP_MAXSEQ	seqmap.h	14;"	d
+SEQMAP_TIMEOUT_IN_S	seqmap.c	58;"	d	file:
+SEQMAP_UNASSIGNED_HOST_NR	seqmap.c	59;"	d	file:
+SEQMAP_VALUE	seqmap.h	/^} SEQMAP_VALUE;$/;"	t	typeref:struct:seqmap_value
+SET_MAKE	Makefile	/^SET_MAKE = $/;"	m
+SHELL	Makefile	/^SHELL = \/bin\/bash$/;"	m
+SIZE_ICMP_HDR	fping.c	120;"	d	file:
+SIZE_ICMP_HDR	fping.c	122;"	d	file:
+SIZE_IP_HDR	fping.c	118;"	d	file:
+SOURCES	Makefile	/^SOURCES = $(fping_SOURCES) $(fping6_SOURCES)$/;"	m
+STRIP	Makefile	/^STRIP = $/;"	m
+VERSION	Makefile	/^VERSION = 3.10$/;"	m
+_FPING_H	fping.h	2;"	d
+__APPLE_USE_RFC_3542	fping.h	4;"	d
+abs_builddir	Makefile	/^abs_builddir = \/home\/sulit\/mygitsrc\/fping-3.10\/src$/;"	m
+abs_srcdir	Makefile	/^abs_srcdir = \/home\/sulit\/mygitsrc\/fping-3.10\/src$/;"	m
+abs_top_builddir	Makefile	/^abs_top_builddir = \/home\/sulit\/mygitsrc\/fping-3.10$/;"	m
+abs_top_srcdir	Makefile	/^abs_top_srcdir = \/home\/sulit\/mygitsrc\/fping-3.10$/;"	m
+ac_ct_CC	Makefile	/^ac_ct_CC = gcc$/;"	m
+add_addr	fping.c	/^void add_addr( char *name, char *host, struct in_addr ipaddr )$/;"	f
+add_cidr	fping.c	/^void add_cidr(char *addr)$/;"	f
+add_name	fping.c	/^void add_name( char *name )$/;"	f
+add_range	fping.c	/^void add_range(char *start, char *end)$/;"	f
+addr_flag	fping.c	/^int per_recv_flag, report_all_rtts_flag, name_flag, addr_flag, backoff_flag;$/;"	v
+alive_flag	fping.c	/^int verbose_flag, quiet_flag, stats_flag, unreachable_flag, alive_flag;$/;"	v
+am__EXEEXT_1	Makefile	/^am__EXEEXT_1 = fping$(EXEEXT)$/;"	m
+am__EXEEXT_3	Makefile	/^am__EXEEXT_3 = $(am__EXEEXT_1) $(am__EXEEXT_2)$/;"	m
+am__aclocal_m4_deps	Makefile	/^am__aclocal_m4_deps = $(top_srcdir)\/configure.ac$/;"	m
+am__append_1	Makefile	/^am__append_1 = fping$/;"	m
+am__can_run_installinfo	Makefile	/^am__can_run_installinfo = \\$/;"	m
+am__cd	Makefile	/^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"	m
+am__configure_deps	Makefile	/^am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \\$/;"	m
+am__define_uniq_tagged_files	Makefile	/^am__define_uniq_tagged_files = \\$/;"	m
+am__depfiles_maybe	Makefile	/^am__depfiles_maybe = depfiles$/;"	m
+am__include	Makefile	/^am__include = include$/;"	m
+am__installdirs	Makefile	/^am__installdirs = "$(DESTDIR)$(sbindir)"$/;"	m
+am__is_gnu_make	Makefile	/^am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'$/;"	m
+am__leading_dot	Makefile	/^am__leading_dot = .$/;"	m
+am__make_dryrun	Makefile	/^am__make_dryrun = (target_option=n; $(am__make_running_with_option))$/;"	m
+am__make_keepgoing	Makefile	/^am__make_keepgoing = (target_option=k; $(am__make_running_with_option))$/;"	m
+am__make_running_with_option	Makefile	/^am__make_running_with_option = \\$/;"	m
+am__mv	Makefile	/^am__mv = mv -f$/;"	m
+am__quote	Makefile	/^am__quote = $/;"	m
+am__tagged_files	Makefile	/^am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)$/;"	m
+am__tar	Makefile	/^am__tar = $${TAR-tar} chof - "$$tardir"$/;"	m
+am__uniquify_input	Makefile	/^am__uniquify_input = $(AWK) '\\$/;"	m
+am__untar	Makefile	/^am__untar = $${TAR-tar} xf -$/;"	m
+am__v_CCLD_	Makefile	/^am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_CCLD_0	Makefile	/^am__v_CCLD_0 = @echo "  CCLD    " $@;$/;"	m
+am__v_CCLD_1	Makefile	/^am__v_CCLD_1 = $/;"	m
+am__v_CC_	Makefile	/^am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_CC_0	Makefile	/^am__v_CC_0 = @echo "  CC      " $@;$/;"	m
+am__v_CC_1	Makefile	/^am__v_CC_1 = $/;"	m
+am__v_GEN_	Makefile	/^am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_GEN_0	Makefile	/^am__v_GEN_0 = @echo "  GEN     " $@;$/;"	m
+am__v_GEN_1	Makefile	/^am__v_GEN_1 = $/;"	m
+am__v_P_	Makefile	/^am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_P_0	Makefile	/^am__v_P_0 = false$/;"	m
+am__v_P_1	Makefile	/^am__v_P_1 = :$/;"	m
+am__v_at_	Makefile	/^am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_at_0	Makefile	/^am__v_at_0 = @$/;"	m
+am__v_at_1	Makefile	/^am__v_at_1 = $/;"	m
+am__v_lt_	Makefile	/^am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_lt_0	Makefile	/^am__v_lt_0 = --silent$/;"	m
+am__v_lt_1	Makefile	/^am__v_lt_1 = $/;"	m
+am_fping6_OBJECTS	Makefile	/^am_fping6_OBJECTS = fping6-fping.$(OBJEXT) fping6-seqmap.$(OBJEXT) \\$/;"	m
+am_fping_OBJECTS	Makefile	/^am_fping_OBJECTS = fping.$(OBJEXT) seqmap.$(OBJEXT) socket.$(OBJEXT) \\$/;"	m
+backoff	fping.c	/^float backoff = DEFAULT_BACKOFF_FACTOR;$/;"	v
+backoff_flag	fping.c	/^int per_recv_flag, report_all_rtts_flag, name_flag, addr_flag, backoff_flag;$/;"	v
+bindir	Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
+build	Makefile	/^build = x86_64-unknown-linux-gnu$/;"	m
+build_alias	Makefile	/^build_alias = $/;"	m
+build_cpu	Makefile	/^build_cpu = x86_64$/;"	m
+build_os	Makefile	/^build_os = linux-gnu$/;"	m
+build_triplet	Makefile	/^build_triplet = x86_64-unknown-linux-gnu$/;"	m
+build_vendor	Makefile	/^build_vendor = unknown$/;"	m
+builddir	Makefile	/^builddir = .$/;"	m
+count	fping.c	/^unsigned int count = 1;$/;"	v
+count_flag	fping.c	/^int elapsed_flag, version_flag, count_flag, loop_flag;$/;"	v
+crash_and_burn	fping.c	/^void crash_and_burn( char *message )$/;"	f
+current_time	fping.c	/^struct timeval current_time;        \/* current time (pseudo) *\/$/;"	v	typeref:struct:timeval
+datadir	Makefile	/^datadir = ${datarootdir}$/;"	m
+datarootdir	Makefile	/^datarootdir = ${prefix}\/share$/;"	m
+debugging	fping.c	/^unsigned int debugging = 0;$/;"	v
+depcomp	Makefile	/^depcomp = $(SHELL) $(top_srcdir)\/depcomp$/;"	m
+docdir	Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
+dvidir	Makefile	/^dvidir = ${docdir}$/;"	m
+elapsed_flag	fping.c	/^int elapsed_flag, version_flag, count_flag, loop_flag;$/;"	v
+end_time	fping.c	/^struct timeval end_time;$/;"	v	typeref:struct:timeval
+errno_crash_and_burn	fping.c	/^void errno_crash_and_burn( char *message )$/;"	f
+ev_dequeue	fping.c	/^HOST_ENTRY *ev_dequeue()$/;"	f
+ev_enqueue	fping.c	/^void ev_enqueue(HOST_ENTRY  *h)$/;"	f
+ev_first	fping.c	/^HOST_ENTRY *ev_first;$/;"	v
+ev_last	fping.c	/^HOST_ENTRY *ev_last;$/;"	v
+ev_next	fping.c	/^     struct host_entry    *ev_next;           \/* double linked list for the event-queue *\/$/;"	m	struct:host_entry	typeref:struct:host_entry::host_entry	file:
+ev_prev	fping.c	/^     struct host_entry    *ev_prev;           \/* double linked list for the event-queue *\/$/;"	m	struct:host_entry	typeref:struct:host_entry::host_entry	file:
+ev_remove	fping.c	/^void ev_remove(HOST_ENTRY *h)$/;"	f
+ev_time	fping.c	/^     struct timeval       ev_time;            \/* time, after which this event should happen *\/$/;"	m	struct:host_entry	typeref:struct:host_entry::timeval	file:
+ev_type	fping.c	/^     int                  ev_type;            \/* event type *\/$/;"	m	struct:host_entry	file:
+exec_prefix	Makefile	/^exec_prefix = ${prefix}$/;"	m
+filename	fping.c	/^char *filename = NULL;              \/* file containing hosts to ping *\/$/;"	v
+finish	fping.c	/^void finish()$/;"	f
+fping6_CFLAGS	Makefile	/^fping6_CFLAGS = $(AM_CFLAGS) -DIPV6$/;"	m
+fping6_DEPENDENCIES	Makefile	/^fping6_DEPENDENCIES = ..\/config.h$/;"	m
+fping6_LDADD	Makefile	/^fping6_LDADD = $(LDADD)$/;"	m
+fping6_LINK	Makefile	/^fping6_LINK = $(CCLD) $(fping6_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \\$/;"	m
+fping6_OBJECTS	Makefile	/^fping6_OBJECTS = $(am_fping6_OBJECTS)$/;"	m
+fping6_SOURCES	Makefile	/^fping6_SOURCES = fping.c seqmap.c socket.c socket6.c fping.h options.h seqmap.h$/;"	m
+fping_DEPENDENCIES	Makefile	/^fping_DEPENDENCIES = ..\/config.h$/;"	m
+fping_LDADD	Makefile	/^fping_LDADD = $(LDADD)$/;"	m
+fping_OBJECTS	Makefile	/^fping_OBJECTS = $(am_fping_OBJECTS)$/;"	m
+fping_SOURCES	Makefile	/^fping_SOURCES = fping.c seqmap.c socket.c socket4.c fping.h options.h seqmap.h$/;"	m
+generate_flag	fping.c	/^int generate_flag = 0;              \/* flag for IP list generation *\/$/;"	v
+get_host_by_address	fping.c	/^char *get_host_by_address( struct in_addr in )$/;"	f
+handle_random_icmp	fping.c	/^int handle_random_icmp( FPING_ICMPHDR *p, int psize, FPING_SOCKADDR *addr )$/;"	f
+host	Makefile	/^host = x86_64-unknown-linux-gnu$/;"	m
+host	fping.c	/^     char                 *host;              \/* text description of host *\/$/;"	m	struct:host_entry	file:
+host_alias	Makefile	/^host_alias = $/;"	m
+host_cpu	Makefile	/^host_cpu = x86_64$/;"	m
+host_entry	fping.c	/^typedef struct host_entry$/;"	s	file:
+host_nr	seqmap.h	/^    unsigned int    host_nr;$/;"	m	struct:seqmap_value
+host_os	Makefile	/^host_os = linux-gnu$/;"	m
+host_triplet	Makefile	/^host_triplet = x86_64-unknown-linux-gnu$/;"	m
+host_vendor	Makefile	/^host_vendor = unknown$/;"	m
+htmldir	Makefile	/^htmldir = ${docdir}$/;"	m
+i	fping.c	/^     int                  i;                  \/* index into array *\/$/;"	m	struct:host_entry	file:
+icmp_type_str	fping.c	/^char *icmp_type_str[19] =$/;"	v
+icmp_unreach_str	fping.c	/^char *icmp_unreach_str[16] =$/;"	v
+ident	fping.c	/^int ident;                  \/* our pid *\/$/;"	v
+in_cksum	fping.c	/^int in_cksum( unsigned short *p, int n )$/;"	f
+includedir	Makefile	/^includedir = ${prefix}\/include$/;"	m
+infodir	Makefile	/^infodir = ${datarootdir}\/info$/;"	m
+install_sh	Makefile	/^install_sh = ${SHELL} \/home\/sulit\/mygitsrc\/fping-3.10\/install-sh$/;"	m
+install_sh_DATA	Makefile	/^install_sh_DATA = $(install_sh) -c -m 644$/;"	m
+install_sh_PROGRAM	Makefile	/^install_sh_PROGRAM = $(install_sh) -c$/;"	m
+install_sh_SCRIPT	Makefile	/^install_sh_SCRIPT = $(install_sh) -c$/;"	m
+interval	fping.c	/^unsigned int interval = DEFAULT_INTERVAL * 100;$/;"	v
+last_report_time	fping.c	/^struct timeval last_report_time;    \/* time last report was printed *\/$/;"	v	typeref:struct:timeval
+last_send_time	fping.c	/^     struct timeval       last_send_time;     \/* time of last packet sent *\/$/;"	m	struct:host_entry	typeref:struct:host_entry::timeval	file:
+last_send_time	fping.c	/^struct timeval last_send_time;      \/* time last ping was sent *\/$/;"	v	typeref:struct:timeval
+libdir	Makefile	/^libdir = ${exec_prefix}\/lib$/;"	m
+libexecdir	Makefile	/^libexecdir = ${exec_prefix}\/libexec$/;"	m
+localedir	Makefile	/^localedir = ${datarootdir}\/locale$/;"	m
+localstatedir	Makefile	/^localstatedir = ${prefix}\/var$/;"	m
+loop_flag	fping.c	/^int elapsed_flag, version_flag, count_flag, loop_flag;$/;"	v
+lose_factor	fping.c	/^int lose_factor;$/;"	v
+main	fping.c	/^int main( int argc, char **argv )$/;"	f
+main_loop	fping.c	/^void main_loop()$/;"	f
+mandir	Makefile	/^mandir = ${datarootdir}\/man$/;"	m
+max_hostname_len	fping.c	/^int max_hostname_len = 0;$/;"	v
+max_reply	fping.c	/^     int                  max_reply;          \/* longest response time *\/$/;"	m	struct:host_entry	file:
+max_reply	fping.c	/^long max_reply = 0;$/;"	v
+max_reply_i	fping.c	/^     int                  max_reply_i;        \/* longest response time *\/$/;"	m	struct:host_entry	file:
+min_reply	fping.c	/^     int                  min_reply;          \/* shortest response time *\/$/;"	m	struct:host_entry	file:
+min_reply	fping.c	/^long min_reply = 0;$/;"	v
+min_reply_i	fping.c	/^     int                  min_reply_i;        \/* shortest response time *\/$/;"	m	struct:host_entry	file:
+mkdir_p	Makefile	/^mkdir_p = $(MKDIR_P)$/;"	m
+mkinstalldirs	Makefile	/^mkinstalldirs = $(install_sh) -d$/;"	m
+multif_flag	fping.c	/^int multif_flag;$/;"	v
+name	fping.c	/^     char                 *name;              \/* name as given by user *\/$/;"	m	struct:host_entry	file:
+name_flag	fping.c	/^int per_recv_flag, report_all_rtts_flag, name_flag, addr_flag, backoff_flag;$/;"	v
+num_alive	fping.c	/^int num_alive = 0,                  \/* total number alive *\/$/;"	v
+num_hosts	fping.c	/^int num_hosts;                      \/* total number of hosts *\/$/;"	v
+num_jobs	fping.c	/^int num_jobs = 0;                   \/* number of hosts still to do *\/$/;"	v
+num_noaddress	fping.c	/^    num_noaddress = 0;              \/* total number of addresses not found *\/$/;"	v
+num_othericmprcvd	fping.c	/^    num_othericmprcvd = 0;          \/* total non-echo-reply ICMP received *\/$/;"	v
+num_pingreceived	fping.c	/^    num_pingreceived = 0,           \/* total pings received *\/$/;"	v
+num_pingsent	fping.c	/^    num_pingsent = 0,               \/* total pings sent *\/$/;"	v
+num_recv	fping.c	/^     int                  num_recv;           \/* number of pings received (duplicates ignored) *\/$/;"	m	struct:host_entry	file:
+num_recv_i	fping.c	/^     int                  num_recv_i;         \/* number of pings received *\/$/;"	m	struct:host_entry	file:
+num_recv_total	fping.c	/^     int                  num_recv_total;     \/* number of pings received, including duplicates *\/$/;"	m	struct:host_entry	file:
+num_sent	fping.c	/^     int                  num_sent;           \/* number of ping packets sent *\/$/;"	m	struct:host_entry	file:
+num_sent_i	fping.c	/^     int                  num_sent_i;         \/* number of ping packets sent *\/$/;"	m	struct:host_entry	file:
+num_timeout	fping.c	/^int num_timeout = 0,                \/* number of times select timed out *\/$/;"	v
+num_unreachable	fping.c	/^    num_unreachable = 0,            \/* total number unreachable *\/$/;"	v
+oldincludedir	Makefile	/^oldincludedir = \/usr\/include$/;"	m
+open_ping_socket	socket.c	/^int open_ping_socket()$/;"	f
+open_ping_socket_ipv4	socket4.c	/^int open_ping_socket_ipv4()$/;"	f
+open_ping_socket_ipv6	socket6.c	/^int open_ping_socket_ipv6()$/;"	f
+pad	fping.c	/^     char                 *pad;               \/* pad to align print names *\/$/;"	m	struct:host_entry	file:
+pdfdir	Makefile	/^pdfdir = ${docdir}$/;"	m
+per_recv_flag	fping.c	/^int per_recv_flag, report_all_rtts_flag, name_flag, addr_flag, backoff_flag;$/;"	v
+perhost_interval	fping.c	/^unsigned int perhost_interval = DEFAULT_PERHOST_INTERVAL * 100;$/;"	v
+ping_count	seqmap.h	/^    unsigned int    ping_count;$/;"	m	struct:seqmap_value
+ping_data_size	fping.c	/^unsigned int ping_data_size = DEFAULT_PING_DATA_SIZE;$/;"	v
+ping_pkt_size	fping.c	/^unsigned int ping_pkt_size;$/;"	v
+ping_ts	seqmap.h	/^    struct timeval  ping_ts;$/;"	m	struct:seqmap_value	typeref:struct:seqmap_value::timeval
+pkgdatadir	Makefile	/^pkgdatadir = $(datadir)\/fping$/;"	m
+pkgincludedir	Makefile	/^pkgincludedir = $(includedir)\/fping$/;"	m
+pkglibdir	Makefile	/^pkglibdir = $(libdir)\/fping$/;"	m
+pkglibexecdir	Makefile	/^pkglibexecdir = $(libexecdir)\/fping$/;"	m
+prefix	Makefile	/^prefix = \/usr\/local$/;"	m
+print_global_stats	fping.c	/^void print_global_stats( void )$/;"	f
+print_per_system_flag	fping.c	/^int randomly_lose_flag, sent_times_flag, trace_flag, print_per_system_flag;$/;"	v
+print_per_system_splits	fping.c	/^void print_per_system_splits( void )$/;"	f
+print_per_system_stats	fping.c	/^void print_per_system_stats( void )$/;"	f
+print_warning	fping.c	/^void print_warning(char *format, ...) {$/;"	f
+prog	Makefile	/^prog = $(am__append_1) $(am__append_2)$/;"	m
+prog	fping.c	/^char *prog;$/;"	v
+program_transform_name	Makefile	/^program_transform_name = s,x,x,$/;"	m
+psdir	Makefile	/^psdir = ${docdir}$/;"	m
+quiet_flag	fping.c	/^int verbose_flag, quiet_flag, stats_flag, unreachable_flag, alive_flag;$/;"	v
+randomly_lose_flag	fping.c	/^int randomly_lose_flag, sent_times_flag, trace_flag, print_per_system_flag;$/;"	v
+recvfrom_wto	fping.c	/^int recvfrom_wto( int s, char *buf, int len, FPING_SOCKADDR *saddr, long timo )$/;"	f
+remove_job	fping.c	/^void remove_job( HOST_ENTRY *h )$/;"	f
+report_all_rtts_flag	fping.c	/^int per_recv_flag, report_all_rtts_flag, name_flag, addr_flag, backoff_flag;$/;"	v
+report_interval	fping.c	/^unsigned int report_interval = 0;$/;"	v
+resp_times	fping.c	/^     int                  *resp_times;        \/* individual response times *\/$/;"	m	struct:host_entry	file:
+retry	fping.c	/^unsigned int retry = DEFAULT_RETRY;$/;"	v
+rrlist	fping.c	/^HOST_ENTRY *rrlist = NULL;  \/* linked list of hosts be pinged *\/$/;"	v
+running	fping.c	/^     unsigned char        running;            \/* unset when through sending *\/$/;"	m	struct:host_entry	file:
+s	fping.c	/^int s;                      \/* socket *\/$/;"	v
+saddr	fping.c	/^     FPING_SOCKADDR       saddr;              \/* internet address *\/$/;"	m	struct:host_entry	file:
+sbin_PROGRAMS	Makefile	/^sbin_PROGRAMS = $(am__EXEEXT_3)$/;"	m
+sbindir	Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
+send_ping	fping.c	/^int send_ping( int s, HOST_ENTRY *h )$/;"	f
+sent_times	fping.c	/^     int                  *sent_times;        \/* per-sent-ping timestamp *\/$/;"	m	struct:host_entry	file:
+sent_times_flag	fping.c	/^int randomly_lose_flag, sent_times_flag, trace_flag, print_per_system_flag;$/;"	v
+seqmap_add	seqmap.c	/^unsigned int seqmap_add(unsigned int host_nr, unsigned int ping_count, struct timeval *now)$/;"	f
+seqmap_fetch	seqmap.c	/^SEQMAP_VALUE *seqmap_fetch(unsigned int id, struct timeval *now)$/;"	f
+seqmap_free_list	seqmap.c	/^static SEQMAP_VALUE *seqmap_free_list;$/;"	v	file:
+seqmap_init	seqmap.c	/^void seqmap_init()$/;"	f
+seqmap_map	seqmap.c	/^static SEQMAP_VALUE *seqmap_map = NULL;$/;"	v	file:
+seqmap_next_id	seqmap.c	/^static unsigned int seqmap_next_id = 0;$/;"	v	file:
+seqmap_value	seqmap.h	/^typedef struct seqmap_value$/;"	s
+sharedstatedir	Makefile	/^sharedstatedir = ${prefix}\/com$/;"	m
+socket_set_src_addr	socket.c	/^void socket_set_src_addr(int s, FPING_INADDR src_addr)$/;"	f
+socket_set_src_addr_ipv4	socket4.c	/^void socket_set_src_addr_ipv4(int s, FPING_INADDR src_addr)$/;"	f
+socket_set_src_addr_ipv6	socket6.c	/^void socket_set_src_addr_ipv6(int s, FPING_INADDR src_addr)$/;"	f
+sprint_tm	fping.c	/^char * sprint_tm( int t )$/;"	f
+src_addr	fping.c	/^struct in6_addr src_addr;$/;"	v	typeref:struct:in6_addr
+src_addr	fping.c	/^struct in_addr src_addr;$/;"	v	typeref:struct:in_addr
+src_addr_present	fping.c	/^int src_addr_present = 0;$/;"	v
+srcdir	Makefile	/^srcdir = .$/;"	m
+start_time	fping.c	/^struct timeval start_time; $/;"	v	typeref:struct:timeval
+stats_flag	fping.c	/^int verbose_flag, quiet_flag, stats_flag, unreachable_flag, alive_flag;$/;"	v
+subdir	Makefile	/^subdir = src$/;"	m
+sum_replies	fping.c	/^double sum_replies = 0;$/;"	v
+sysconfdir	Makefile	/^sysconfdir = ${prefix}\/etc$/;"	m
+table	fping.c	/^HOST_ENTRY **table = NULL;  \/* array of pointers to items in the list *\/$/;"	v
+target	Makefile	/^target = x86_64-unknown-linux-gnu$/;"	m
+target_alias	Makefile	/^target_alias = $/;"	m
+target_cpu	Makefile	/^target_cpu = x86_64$/;"	m
+target_os	Makefile	/^target_os = linux-gnu$/;"	m
+target_triplet	Makefile	/^target_triplet = x86_64-unknown-linux-gnu$/;"	m
+target_vendor	Makefile	/^target_vendor = unknown$/;"	m
+timeout	fping.c	/^     int                  timeout;            \/* time to wait for response *\/$/;"	m	struct:host_entry	file:
+timeout	fping.c	/^unsigned int timeout = DEFAULT_TIMEOUT * 100; $/;"	v
+timestamp_flag	fping.c	/^int timestamp_flag = 0;$/;"	v
+timeval_add	fping.c	/^void timeval_add(struct timeval *a, long t_10u)$/;"	f
+timeval_diff	fping.c	/^long timeval_diff( struct timeval *a, struct timeval *b )$/;"	f
+top_build_prefix	Makefile	/^top_build_prefix = ..\/$/;"	m
+top_builddir	Makefile	/^top_builddir = ..$/;"	m
+top_srcdir	Makefile	/^top_srcdir = ..$/;"	m
+total_replies	fping.c	/^int total_replies = 0;$/;"	v
+total_time	fping.c	/^     int                  total_time;         \/* sum of response times *\/$/;"	m	struct:host_entry	file:
+total_time_i	fping.c	/^     int                  total_time_i;       \/* sum of response times *\/$/;"	m	struct:host_entry	file:
+trace_flag	fping.c	/^int randomly_lose_flag, sent_times_flag, trace_flag, print_per_system_flag;$/;"	v
+transform	Makefile	/^transform = $(program_transform_name)$/;"	m
+trials	fping.c	/^unsigned int trials;$/;"	v
+ttl	fping.c	/^unsigned int ttl = 0;$/;"	v
+tz	fping.c	/^struct timezone tz;$/;"	v	typeref:struct:timezone
+u_sleep	fping.c	/^void u_sleep( int u_sec )$/;"	f
+unreachable_flag	fping.c	/^int verbose_flag, quiet_flag, stats_flag, unreachable_flag, alive_flag;$/;"	v
+usage	fping.c	/^void usage(int is_error)$/;"	f
+verbose_flag	fping.c	/^int verbose_flag, quiet_flag, stats_flag, unreachable_flag, alive_flag;$/;"	v
+version_flag	fping.c	/^int elapsed_flag, version_flag, count_flag, loop_flag;$/;"	v
+wait_for_reply	fping.c	/^int wait_for_reply(long wait_time)$/;"	f
+waiting	fping.c	/^     unsigned char        waiting;            \/* waiting for response *\/$/;"	m	struct:host_entry	file:
