@@ -562,6 +562,7 @@ int main( int argc, char **argv )
     }/* WHILE */
 
     /* validate various option settings */
+	//printf("test 1\n");
 
     if (ttl > 255) {
         fprintf(stderr, "ttl %u out of range\n", ttl);  
@@ -709,6 +710,8 @@ int main( int argc, char **argv )
     /* handle host names supplied on command line or in a file */
     /* if the generate_flag is on, then generate the IP list */
 
+	printf("argc have %d, argv[0] is %s, argv[1] is %s, optind is %d\n", argc, argv[0], argv[1], optind);
+
     argv = &argv[optind];
     argc -= optind;
 
@@ -724,10 +727,12 @@ int main( int argc, char **argv )
     if( !*argv && !filename && !generate_flag )
         filename = "-";
     
+	printf("argc have %d, argv[0] is %s, argv[1] is %s\n", argc, argv[0], argv[1]);
     if( *argv && !generate_flag )
     {
         while( *argv )
         {
+			printf("add_name\n");
             add_name( *argv );
             ++argv;
 

@@ -1,0 +1,2 @@
+fping:fping.c seqmap.c socket.c socket4.c
+	clang -g -o fping fping.c seqmap.c socket.c  socket4.c
