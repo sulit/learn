@@ -710,7 +710,7 @@ int main( int argc, char **argv )
     /* handle host names supplied on command line or in a file */
     /* if the generate_flag is on, then generate the IP list */
 
-	printf("argc have %d, argv[0] is %s, argv[1] is %s, optind is %d\n", argc, argv[0], argv[1], optind);
+	//printf("argc have %d, argv[0] is %s, argv[1] is %s, optind is %d\n", argc, argv[0], argv[1], optind);
 
     argv = &argv[optind];
     argc -= optind;
@@ -727,7 +727,7 @@ int main( int argc, char **argv )
     if( !*argv && !filename && !generate_flag )
         filename = "-";
     
-	printf("argc have %d, argv[0] is %s, argv[1] is %s\n", argc, argv[0], argv[1]);
+	//printf("argc have %d, argv[0] is %s, argv[1] is %s\n", argc, argv[0], argv[1]);
     if( *argv && !generate_flag )
     {
         while( *argv )
@@ -2133,6 +2133,9 @@ void add_addr( char *name, char *host, FPING_SOCKADDR *ipaddr )
 {
     HOST_ENTRY *p;
     int n, *i;
+
+	printf("add_addr name %s\n",name);
+	printf("add_addr ipaddr %X\n",ipaddr);
 
     p = ( HOST_ENTRY* )malloc( sizeof( HOST_ENTRY ) );
     if( !p )
