@@ -48,6 +48,7 @@ int open_ping_socket_ipv4()
     if( ( proto = getprotobyname( "icmp" ) ) == NULL ) 
         crash_and_burn( "icmp: unknown protocol" );
 
+	printf("%d\n",proto->p_proto);
     /* create raw socket for ICMP calls (ping) */
     s = socket( AF_INET, SOCK_RAW, proto->p_proto );
     if( s < 0 ) {

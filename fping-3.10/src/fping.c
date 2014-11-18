@@ -367,6 +367,7 @@ int main( int argc, char **argv )
     HOST_ENTRY *cursor;
 
     s = open_ping_socket();
+	printf("%d\n",s);
 
     if((uid = getuid())) {
         /* drop privileges */
@@ -380,9 +381,11 @@ int main( int argc, char **argv )
     opterr = 1;
 
     /* get command line options */
-
+#if 0 //my comment
     while( ( c = getopt( argc, argv, "gedhlmnqusaAvDz:t:H:i:p:f:r:c:b:C:Q:B:S:I:T:O:" ) ) != EOF )
     {
+	printf("in getopt\n");
+	printf("the getopt char is %c\n", c);
         switch( c )
         {
         case 't':
@@ -559,7 +562,9 @@ int main( int argc, char **argv )
             break;
 
         }/* SWITCH */
+	printf("out getopt\n");
     }/* WHILE */
+#endif
 
     /* validate various option settings */
 	//printf("test 1\n");
@@ -733,6 +738,7 @@ int main( int argc, char **argv )
         while( *argv )
         {
 			printf("add_name\n");
+			printf("%s\n", *argv);
             add_name( *argv );
             ++argv;
 
