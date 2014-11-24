@@ -847,6 +847,7 @@ int main( int argc, char **argv )
 
     seqmap_init();
 
+	printf("The main loop\n");
     /* main loop */
     main_loop();
 
