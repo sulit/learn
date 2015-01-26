@@ -1,0 +1,5 @@
+ncurses-examples (20110404) unstable; urgency=low
+
+  * snapshot of ncurses subpackage for ncurses-examples.
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Mon, 04 Apr 2011 19:24:40 -0400

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/9349/luci/branches/luci-0.11/libs/nixio/lua/nixio
+END
+fs.lua
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/9349/luci/branches/luci-0.11/libs/nixio/lua/nixio/fs.lua
+END
+util.lua
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/9349/luci/branches/luci-0.11/libs/nixio/lua/nixio/util.lua
+END
