@@ -25,6 +25,7 @@ main()
 	}
 	else
 	{
+		sleep(2);
 		if ((waitpid(pid, NULL, WNOHANG)) == 0)
 		{
 			if ((ret = kill(pid, SIGKILL)) == 0)
