@@ -46,7 +46,7 @@ main()
 		sigemptyset(&action2.sa_mask);
 		action2.sa_handler = SIG_DFL;
 		action2.sa_flags = 0;
-		sigaction(SIGINT, &action2, NULL);
+		sigaction(SIGQUIT, &action2, NULL);
 	}
 
 	if (sigprocmask(SIG_BLOCK, &set, NULL) < 0)
