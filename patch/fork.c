@@ -5,7 +5,9 @@ int main(void)
 {
 	pid_t result;
 
-	if ((result = fork()) == -1)
+	result = fork();
+
+	if (result == -1)
 	{
 		printf("Fork error\n");
 	}
