@@ -1,0 +1,13 @@
+--- fork.c	2015-03-09 12:40:49.454135745 +0800
++++ fork2.c	2015-03-24 09:13:43.476012870 +0800
+@@ -5,9 +5,7 @@
+ {
+ 	pid_t result;
+ 
+-	result = fork();
+-
+-	if (result == -1)
++	if ((result = fork()) == -1)
+ 	{
+ 		printf("Fork error\n");
+ 	}
