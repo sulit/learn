@@ -39,21 +39,21 @@ const char *include_paths[INCLUDE_PATHS_MAX] = { DEFAULT_INCLUDE_PATH };
 static unsigned int num_include_paths = 1;
 
 enum opt_vals {
-	OPT_HELP		= 'h',
-	OPT_VERSION		= 'v',
-	OPT_FILE		= 'f',
-	OPT_INTERACTIVE		= 'i',
-	OPT_INCLUDEPATH		= 'I',
-	OPT_NUMERIC		= 'n',
-	OPT_IP2NAME		= 'N',
-	OPT_DEBUG		= 'd',
-	OPT_HANDLE_OUTPUT	= 'a',
-	OPT_INVALID		= '?',
+	OPT_HELP		= 'h', //帮助
+	OPT_VERSION		= 'v', //版本
+	OPT_FILE		= 'f', //文件
+	OPT_INTERACTIVE		= 'i', //交互
+	OPT_INCLUDEPATH		= 'I', //包含路径
+	OPT_NUMERIC		= 'n', //数值
+	OPT_IP2NAME		= 'N', //IP 到 名字
+	OPT_DEBUG		= 'd', //调试
+	OPT_HANDLE_OUTPUT	= 'a', //输出控制
+	OPT_INVALID		= '?', //未知项
 };
 
-#define OPTSTRING	"hvf:iI:vnNa"
+#define OPTSTRING	"hvf:iI:vnNa" //参数选项
 
-static const struct option options[] = {
+static const struct option options[] = { //参数命令结构体
 	{
 		.name		= "help",
 		.val		= OPT_HELP,
@@ -100,7 +100,7 @@ static const struct option options[] = {
 	}
 };
 
-static void show_help(const char *name)
+static void show_help(const char *name) //命令help函数
 {
 	printf(
 "Usage: %s [ options ] [ cmds... ]\n"
@@ -166,7 +166,7 @@ static const struct {
 };
 #endif
 
-static const struct input_descriptor indesc_cmdline = {
+static const struct input_descriptor indesc_cmdline = { //命令行结构体
 	.type	= INDESC_BUFFER,
 	.name	= "<cmdline>",
 };
