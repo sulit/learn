@@ -123,7 +123,7 @@ randomize_fd(int fd, int type, int unique, double denom)
 				eof++;
 				break;
 			} else if ((size_t)len < buflen)
-				buflen = (size_t)len;
+				buflen = (size_t)len; //这条语句是直接以后每次把读到缓冲区的字节减少了,当然可能下次就读不到东西了
 
 			bufleft = (int)len;
 		}
