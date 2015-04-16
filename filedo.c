@@ -29,7 +29,7 @@ main(int argc, char *argv[])
 	if (argc != 2)
 		usage();
 
-	srand((unsigned int)time(NULL));
+	srandom((unsigned int)time(NULL));
 	jobstart = time(NULL);
 	sprintf(writebuf, "echo > /dev/shm/outtime.txt");
 	system(writebuf);
@@ -57,7 +57,7 @@ main(int argc, char *argv[])
 		if (fd != -1)
 			close(fd);
 
-		gettimeofday(&start, NULL);
+		gettimeofday(&end, NULL);
 
 		startusec = start.tv_sec * 1000000 + start.tv_usec;
 		endusec = end.tv_sec * 1000000 + end.tv_usec;
