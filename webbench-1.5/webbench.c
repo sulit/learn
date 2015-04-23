@@ -77,7 +77,7 @@ static void build_request(const char *url);
 static void alarm_handler(int signal)
 {
    timerexpired=1;
-}	
+}
 
 static void usage(void)
 {
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
  {
 	  usage();
           return 2;
- } 
+ }
 
  while((opt=getopt_long(argc,argv,"912Vfrt:p:c:?h",long_options,&options_index))!=EOF )
  {
@@ -293,7 +293,7 @@ void build_request(const char *url)
 /* vraci system rc error kod */
 static int bench(void)
 {
-  int i,j,k;	
+  int i,j,k;
   pid_t pid=0;
   FILE *f;
 
