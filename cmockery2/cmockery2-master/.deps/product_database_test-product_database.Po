@@ -1,0 +1,4 @@
+product_database_test-product_database.o: src/example/product_database.c \
+ src/example/database.h
+
+src/example/database.h:

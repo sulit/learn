@@ -17,7 +17,7 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <inttypes.h>
-#include <cmockery.h>
+#include <cmockery/cmockery.h>
 
 // A test case that does nothing and succeeds.
 static void null_test_success(void **state) {
