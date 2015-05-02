@@ -1,5 +1,0 @@
-#include "apue.h"
-#include <fcntl.h>
-#include <sys/mman.h>
-
-#define COPYINCR (1024*1024*1024)
