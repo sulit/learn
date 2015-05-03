@@ -1,9 +1,0 @@
-#include "apue.h"
-#include <ctype.h>
-#include <fcntl.h>
-
-#define BSZ 4096
-
-unsigned char buf[BSZ];
-
-unsigned char translate(unsigned char c)
