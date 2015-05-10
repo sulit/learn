@@ -37,7 +37,7 @@ helper(void *arg)
 
 	for (;;) {
 		memset(&m, 0, sizeof(m));
-		if ((n = msgrcv(tip->qid, &m, MAXMSZ, 0, MSG_NOERROR)))
+		if ((n = msgrcv(tip->qid, &m, MAXMSZ, 0, MSG_NOERROR)) < 0)
 			err_sys("msgrcv error");
 		if (write(tip->fd, m.mtext, n) < 0)
 			err_sys("write error");
@@ -59,17 +59,17 @@ main()
 		if ((qid[i] = msgget((KEY+i), IPC_CREAT|0666)) < 0)
 			err_sys("msgget error");
 
-	printf("queue ID %d is %d\n", i, qid[i]);
-
-	if (socketpair(AF_UNIX, SOCK_DGRAM, 0, fd) < 0)
-		err_sys("socketpair error");
-
-	pfd[i].fd = fd[0];
-	pfd[i].events = POLLIN;
-	ti[i].qid = qid[i];
-	ti[i].fd = fd[1];
-	if ((err = pthread_create(&tid[i], NULL, helper, &ti[i])) != 0)
-		err_exit(err, "pthread create error");
+		printf("queue ID %d is %d\n", i, qid[i]);
+	
+		if (socketpair(AF_UNIX, SOCK_DGRAM, 0, fd) < 0)
+			err_sys("socketpair error");
+	
+		pfd[i].fd = fd[0];
+		pfd[i].events = POLLIN;
+		ti[i].qid = qid[i];
+		ti[i].fd = fd[1];
+		if ((err = pthread_create(&tid[i], NULL, helper, &ti[i])) != 0)
+			err_exit(err, "pthread create error");
 	}
 
 	for (;;) {
