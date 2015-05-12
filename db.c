@@ -125,3 +125,116 @@ db_open(const char *pathname, int oflag, ...)
   db_rewind(db);
   return(db);
 }
+
+static DB *
+_db_alloc(int namelen)
+{
+  DB *db;
+
+  if ((db = calloc(1, sizeof(DB))) == NULL)
+      err_dump("_db_alloc: calloc error for DB");
+  db->idxfd = db->datfd = -1;
+
+  if ((db->name = malloc(namelen + 5)) == NULL)
+    err_dump("_db_alloc: malloc error for name");
+
+  if ((db->idxbuf = malloc(IDXLEN_MAX + 2)) == NULL)
+    err_dump("_db_alloc: malloc error for index buffer");
+  if ((db->datbuf = malloc(DATLEN_MAX + 2)) == NULL)
+    err_dump("_db_alloc: malloc error for data buffer");
+  return(db);
+}
+
+void
+db_close(DBHANDLE h)
+{
+  _db_free((DB *)h);
+}
+
+static void
+_db_free(DB *db)
+{
+  if (db->idxfd >= 0)
+    close(db->idxfd);
+  if (db->datfd >= 0)
+    close(db->datfd);
+  if (db->idxbuf != NULL)
+    free(db->idxbuf);
+  if (db->datbuf != NULL)
+    free(db->datbuf);
+  if (db->name != NULL)
+    free(db->name);
+  free(db);
+}
+
+char *
+db_fetch(DBHANDLE h, const char *key)
+{
+  DB *db = h;
+  char *ptr;
+
+  if (_db_find_and_lock(db, key, 0) < 0) {
+    ptr = NULL;
+    db->cnt_fetcherr++;
+  } else {
+    ptr = _db_readdat(db);
+    db->cnt_fetchok++;
+  }
+
+  if (un_lock(db->idxfd, db->chainoff, SEEK_SET, 1) < 0)
+    err_dump("db_fetch: un_lock error");
+  return(ptr);
+}
+
+static int
+_db_find_and_lock(DB *db, const char *key, int writelock)
+{
+  off_t offset, nextoffset;
+
+  db->chainoff = (_db_hash(db, key) * PTR_SZ) + db->hashoff;
+  db->ptroff = db->chainoff;
+
+  if (writelock) {
+    if (writew_lock(db->idxfd, db->chainoff, SEEK_SET, 1) < 0)
+      err_dump("_db_find_and_lock: writew_lock error");
+  } else {
+    if (readw_lock(db->idxfd, db->chainoff, SEEK_SET, 1) < 0)
+      err_dump("_db_find_and_lock: readw_lock error");
+  }
+
+  offset = _db_readptr(db, db->ptroff);
+  while (offset != 0) {
+    nextoffset = _db_readidx(db, offset);
+    if (strcmp(db->idxbuf, key) == 0)
+      break;
+    db->ptroff = offset;
+    offset = nextoffset;
+  }
+
+  return(offset == 0 ? -1 : 0);
+}
+
+static DBHASH
+_db_hash(DB *db, const char *key)
+{
+  DBHASH hval = 0;
+  char c;
+  int i;
+
+  for (i = 1; (c = *key++) != 0; i++)
+    hval += c * i;
+  return(hval % db->nhash);
+}
+
+static off_t
+_db_readptr(DB *db, off_t offset)
+{
+  char asciiptr[PTR_SZ + 1];
+
+  if (lseek(db->idxfd, offset, SEEK_SET) == -1)
+    err_dump("_db_readptr: lseek error to ptr field");
+  if (read(db->idxfd, asciiptr, PTR_SZ) != PTR_SZ)
+    err_dump("_db_readptr: read error of ptr field");
+  asciiptr[PTR_SZ] = 0;
+  return(atol(asciiptr));
+}
