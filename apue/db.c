@@ -1,3 +1,12 @@
+/*============================================
+*   Copyright (C) 2015 All rights reserved.
+*
+*   filename : db.c
+*   author : sulit - sulitsrc@163.com
+*   last modified : 2015-05-14 00:01
+*   description :
+*
+**============================================*/
 #include "apue.h"
 #include "apue_db.h"
 #include <fcntl.h>
@@ -106,10 +115,10 @@ db_open(const char *pathname, int oflag, ...)
     if (writew_lock(db->idxfd, 0, SEEK_SET, 0) < 0)
       err_dump("db_open: writew_lock error");
 
-    if (fstat(db->idxfd, &statbuf) < 0)
+    if (fstat(db->idxfd, &statbuff) < 0)
       err_sys("db_open: fstat error");
 
-    if (statbuf.st_size == 0) {
+    if (statbuff.st_size == 0) {
       sprintf(asciiptr, "%*d", PTR_SZ, 0);
       hash[0] = 0;
       for (i = 0; i < NHASH_DEF + 1; i++)
@@ -296,7 +305,7 @@ _db_readdat(DB *db)
     err_dump("_db_readdat: lseek error");
   if (read(db->datfd, db->datbuf, db->datlen) != db->datlen)
     err_dump("_db_readdat: read error");
-  if (db->datbuf[db->datlen-1] != NEWLEN)
+  if (db->datbuf[db->datlen-1] != NEWLINE)
     err_dump("_db_readdat: missing newline");
   db->datbuf[db->datlen-1] = 0;
   return(db->datbuf);
@@ -367,7 +376,7 @@ _db_writedat(DB *db, const char *data, off_t offset, int whence)
   iov[0].iov_base = (char *)data;
   iov[0].iov_len = db->datlen - 1;
   iov[1].iov_base = &newline;
-  iov[1].iov_Len = 1;
+  iov[1].iov_len = 1;
   if (writev(db->datfd, &iov[0], 2) != db->datlen)
     err_dump("_db_writedat: write error of data record");
 
@@ -380,7 +389,7 @@ static void
 _db_writeidx(DB *db, const char *key, off_t offset, int whence, off_t ptrval)
 {
   struct iovec iov[2];
-  char asciiptrlen[PTR_SZ + IDXLEN + 1];
+  char asciiptrlen[PTR_SZ + IDXLEN_SZ + 1];
   int len;
 
   if ((db->ptrval = ptrval) < 0 || ptrval > PTR_MAX)
@@ -408,4 +417,163 @@ _db_writeidx(DB *db, const char *key, off_t offset, int whence, off_t ptrval)
   if (whence == SEEK_END)
     if (un_lock(db->idxfd, ((db->nhash+1)*PTR_SZ)+1, SEEK_SET, 0) < 0)
       err_dump("_db_writeidx: un_lock error");
+}
+
+static void
+_db_writeptr(DB *db, off_t offset, off_t ptrval)
+{
+  char asciiptr[PTR_SZ + 1];
+
+  if (ptrval < 0 || ptrval > PTR_MAX)
+    err_quit("_db_writeptr: invalid ptr: %d", ptrval);
+  sprintf(asciiptr, "%*lld", PTR_SZ, (long long)ptrval);
+
+  if (lseek(db->idxfd, offset, SEEK_SET) == -1)
+    err_dump("_db_writeptr: lseek error to ptr field");
+  if (write(db->idxfd, asciiptr, PTR_SZ) != PTR_SZ)
+    err_dump("_db_writeptr: write error of ptr field");
+}
+
+int
+db_store(DBHANDLE h, const char *key, const char *data, int flag)
+{
+  DB *db = h;
+  int rc, keylen, datlen;
+  off_t ptrval;
+
+  if (flag != DB_INSERT && flag != DB_REPLACE && flag != DB_STORE) {
+    errno = EINVAL;
+    return(-1);
+  }
+  keylen = strlen(key);
+  datlen = strlen(data) + 1;
+  if (datlen < DATLEN_MIN || datlen > DATLEN_MAX)
+    err_dump("do_store: invalid data length");
+
+  if (_db_find_and_lock(db, key, 1) < 0) {
+    if (flag == DB_REPLACE) {
+      rc = -1;
+      db->cnt_storerr++;
+      errno = ENOENT;
+      goto doreturn;
+    }
+
+    ptrval = _db_readptr(db, db->chainoff);
+
+    if (_db_findfree(db, keylen, datlen) < 0) {
+      _db_writedat(db, data, 0, SEEK_END);
+      _db_writeidx(db, key, 0, SEEK_END, ptrval);
+
+      _db_writeptr(db, db->chainoff, db->idxoff);
+      db->cnt_stor1++;
+    } else {
+      _db_writedat(db, data, db->datoff, SEEK_SET);
+      _db_writeidx(db, key, db->idxoff, SEEK_SET, ptrval);
+      _db_writeptr(db, db->chainoff, db->idxoff);
+      db->cnt_stor2++;
+    }
+  } else {
+    if (flag == DB_INSERT) {
+      rc = 1;
+      db->cnt_storerr++;
+      goto doreturn;
+    }
+
+    if (datlen != db->datlen) {
+      _db_dodelete(db);
+
+      ptrval = _db_readptr(db, db->chainoff);
+
+      _db_writedat(db, data, 0, SEEK_END);
+      _db_writeidx(db, key, 0, SEEK_END, ptrval);
+
+      _db_writeptr(db, db->chainoff, db->idxoff);
+      db->cnt_stor3++;
+    } else {
+      _db_writedat(db, data, db->datoff, SEEK_SET);
+      db->cnt_stor4++;
+    }
+  }
+  rc = 0;
+
+ doreturn:
+  if (un_lock(db->idxfd, db->chainoff, SEEK_SET, 1) < 0)
+    err_dump("db_store: un_lock error");
+  return(rc);
+}
+
+static int
+_db_findfree(DB *db, int keylen, int datlen)
+{
+  int rc;
+  off_t offset, nextoffset, saveoffset;
+
+  if (writew_lock(db->idxfd, FREE_OFF, SEEK_SET, 1) < 0)
+    err_dump("_db_findfree: writew_lock error");
+
+  saveoffset = FREE_OFF;
+  offset = _db_readptr(db, saveoffset);
+
+  while (offset != 0) {
+    nextoffset = _db_readidx(db, offset);
+    if (strlen(db->idxbuf) == keylen && db->datlen == datlen)
+      break;
+    saveoffset = offset;
+    offset = nextoffset;
+  }
+
+  if (offset == 0) {
+    rc = -1;
+  } else {
+    _db_writeptr(db, saveoffset, db->ptrval);
+    rc = 0;
+  }
+
+  if (un_lock(db->idxfd, FREE_OFF, SEEK_SET, 1) < 0)
+    err_dump("_db_findfree: un_lock error");
+  return(rc);
+}
+
+void
+db_rewind(DBHANDLE h)
+{
+  DB *db = h;
+  off_t offset;
+
+  offset = (db->nhash + 1) * PTR_SZ;
+
+  if ((db->idxoff = lseek(db->idxfd, offset+1, SEEK_SET)) == -1)
+    err_dump("db_rewind: lseek error");
+}
+
+char *
+db_nextrec(DBHANDLE h, char *key)
+{
+  DB *db = h;
+  char c;
+  char *ptr;
+
+  if (readw_lock(db->idxfd, FREE_OFF, SEEK_SET, 1) < 0)
+    err_dump("db_nextrec: readw_lock error");
+
+  do {
+    if (_db_readidx(db, 0) < 0) {
+      ptr = NULL;
+      goto doreturn;
+    }
+
+    ptr = db->idxbuf;
+    while ((c = *ptr++) != 0 && c == SPACE)
+      ;
+  } while (c == 0);
+
+  if (key != NULL)
+    strcpy(key, db->idxbuf);
+  ptr = _db_readdat(db);
+  db->cnt_nextrec++;
+
+ doreturn:
+  if (un_lock(db->idxfd, FREE_OFF, SEEK_SET, 1) < 0)
+    err_dump("db_nextrec: unlock error");
+  return(ptr);
 }
