@@ -26,3 +26,5 @@ sudo make modules_install install
 设计实现一个多线程读取文件内容，读过的就不读了
 
 浪潮之巅
+
+learn readline library
