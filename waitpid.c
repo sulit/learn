@@ -4,41 +4,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-main()
+int main()
 {
 	pid_t pc, pr;
 
 	pc = fork();
 
-	if (pc < 0)
-	{
+	if (pc < 0) {
 		printf("Error fork\n");
-	}
-	else if (pc == 0)
-	{
+	} else if (pc == 0) {
 		sleep(5);
 		exit(0);
-	}
-	else
-	{
-		do
-		{
+	} else {
+		do {
 			pr = waitpid(pc, NULL, WNOHANG);
 
-			if (pr == 0)
-			{
-				printf("The child process has not exited\n");
+			if (pr == 0) {
+				printf
+				    ("The child process has not exited\n");
 				sleep(1);
 			}
 		} while (pr == 0);
 
-		if (pr == pc)
-		{
+		if (pr == pc) {
 			printf("Get child exit code: %d\n", pr);
-		}
-		else
-		{
+		} else {
 			printf("Some error occured.\n");
 		}
 	}
