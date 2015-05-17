@@ -28,3 +28,12 @@ sudo make modules_install install
 浪潮之巅
 
 learn readline library
+
+格式化程序文件操作
+
+```
+indent -kr -i8 program.c
+```
+**注意：**
+
+core文件中可能含有用户信息，不要随便传到网上
