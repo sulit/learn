@@ -1,0 +1,57 @@
+1.用clang编译文件很不错
+2.学习用emacs
+3.C-x = 显示光标位置的详细信息。
+4.C-g 结束当前复杂命令的输入
+5.读完了emacs手册第一章
+6.读完了emacs手册第二章
+7.读完了emacs手册第三章
+8.读完了emacs手册第四章1-7节
+  4.2 C-f 向前移动一个字符
+      C-b 向回移动一个字符
+      C-n 向下移动一个屏幕行 
+      C-p 向上移动一个屏幕行
+      C-a 移动到行首
+      C-e 移动到行尾
+      M-f 向前移动一个单词
+      M-b 向回移动一个单词
+      M-r 
+      M-< 移动到整个缓冲区的首部
+      M-> 移动到整个缓冲区的尾部
+      C-v 向下滚动显示
+      M-v 向上滚动显示
+      M-g c
+      M-g M-g 和 M-g g 移动到缓冲区某一行
+      M-g TAB
+      C-x C-n
+      C-u C-x C-n
+  4.3 backspace 向回删除一个字符
+      delete 向后删除一个字符
+      C-d 向后删除一个字符
+      C-k 删除当前光标到行尾
+      M-d 删除当前单词中当前光标到词尾
+      M-DEL(backspace) 删除当前单词中当前光标到词首
+  4.4 C-/ 取消之前的操作
+      C-x u 和 C-_ 同上
+  4.5 C-x C-f 打开一个文件
+  4.6 C-h k ??(C-n) ??为命令值，显示命令是做什么的
+  4.7 C-o 删除当前光标下的下一个空行
+      C-x C-o 删除当前光标下的紧邻的数个空行
+  4.9 M-x what-line 显示当前光标所在行的行号
+      M-x line-number-mode 显示行号
+      M-x column-number-mode 显示列号
+      M-= 显示在区域内的行数，单词数，字母数
+      M-x count-words 显示缓冲区内的行数，单词数，字母数
+      C-x = 显示一个点后面的字母的代码数
+      M-x hl-line-mode 高亮当前行
+      M-x size-indication-mode 显示当前buffer的大小
+  4.10 M-5 C-n 向下移动5行
+       M-5 0 C-n 向下移动50行
+       C-u 单独四次
+       C-u C-u 执行十六次
+  4.11 C-x z 重复上个命令一次
+       C-x z z 重复上个命令两次（类推）
+
+  5.6  C-x ESC ESC 重新执行上一次minibuffer里的命令
+	   M-x list-command-history 显示整个命令历史
+
+(print "helloworld!")
