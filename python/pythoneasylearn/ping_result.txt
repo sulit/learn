@@ -1,0 +1,24 @@
+PING 192.168.2.1 (192.168.2.1) 56(84) bytes of data.
+
+--- 192.168.2.1 ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 3025ms
+
+PING 192.168.2.2 (192.168.2.2) 56(84) bytes of data.
+From 192.168.2.143 icmp_seq=3 Destination Host Unreachable
+From 192.168.2.143 icmp_seq=3 Destination Host Unreachable
+From 192.168.2.143 icmp_seq=3 Destination Host Unreachable
+From 192.168.2.143 icmp_seq=3 Destination Host Unreachable
+
+--- 192.168.2.2 ping statistics ---
+3 packets transmitted, 0 received, +4 errors, 100% packet loss, time 2010ms
+
+PING 192.168.2.3 (192.168.2.3) 56(84) bytes of data.
+
+--- 192.168.2.3 ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 3006ms
+
+PING 192.168.2.4 (192.168.2.4) 56(84) bytes of data.
+
+--- 192.168.2.4 ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 3021ms
+

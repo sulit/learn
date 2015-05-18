@@ -1,0 +1,83 @@
+<html>
+<head>
+	<title>test</title>
+</head>
+<script>
+	/*
+	var teststr="helloworld";
+	var teststr1="我";
+	var reg=/[a-zA-Z0-9]+/;
+	console.log(reg.test(teststr));
+	console.log(reg.test(teststr1));
+	console.log("hello");
+	*/
+/*
+	//var teststr="hello";
+//功能：判断一个字符是否为ascii码
+//参数：检测的字符
+//返回值：如果是ascii码，返回true，否则返回false
+function isascii(chr)
+{
+	if (chr.charCodeAt(0) > 0x7f) // not ascii
+	{
+		return false;
+	}
+	else // yes
+	{
+		return true;
+	}
+}
+
+//功能：判断一个字符串中是否都是ascii码
+//参数：检测的字符串
+//返回值：如果不包含返回true，否则返回false
+function check_string_allis_ascii(str)
+{
+	for (var i=0; i < str.length; i++)
+	{
+		if (!isascii(str.substring(i,i+1)))
+			return false;
+	}
+	return true;
+}
+
+	var teststr="我";
+	if(!check_string_allis_ascii(teststr))
+		console.log("no");
+	else
+		console.log("yes");
+	teststr="helloworld";
+	if(!check_string_allis_ascii(teststr))
+		console.log("no");
+	else
+		console.log("yes");
+	/*
+	function isascii (chr)
+	{
+		if (chr.charCodeAt(0) > 0x7f) // not ascii
+		{
+			return false;
+		}
+		else // yes
+		{
+			return true;
+		}
+	}
+	for (var i=0; i < teststr.length; i++)
+	{
+		if (isascii(teststr.substring(i,i+1)))
+			console.log(teststr.substring(i,i+1));
+		else
+			console.log("no");
+	}
+	*/
+	var teststr="helo_1l.conf";
+	var res = /[a-zA-Z0-9_]+\.conf/;
+	if (res.test(teststr))
+		console.log("yes");
+	else
+		console.log("no");
+</script>
+<body>
+</body>
+</html>

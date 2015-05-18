@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>string test</title>
+	<script>
+		var teststr = " ";
+		alert(teststr);
+		for (var i=0;i < teststr.length; i++)
+		{
+			if (!(teststr.charCodeAt(i) > 0x20 && teststr.charCodeAt(i) < 0x7F))
+			{
+				console.log("false");
+			}
+			else
+			{
+				console.log("true");
+			}
+			console.log(teststr.charCodeAt(i))
+		}
+	</script>
+</head>
+<body>
+test
+</body>
+</html>

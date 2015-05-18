@@ -1,0 +1,32 @@
+PING 192.168.2.1 (192.168.2.1) 56(84) bytes of data.
+
+--- 192.168.2.1 ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 2999ms
+
+PING 192.168.2.2 (192.168.2.2) 56(84) bytes of data.
+From 192.168.2.143 icmp_seq=1 Destination Host Unreachable
+From 192.168.2.143 icmp_seq=2 Destination Host Unreachable
+From 192.168.2.143 icmp_seq=3 Destination Host Unreachable
+From 192.168.2.143 icmp_seq=4 Destination Host Unreachable
+
+--- 192.168.2.2 ping statistics ---
+4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 3013ms
+pipe 3
+PING 192.168.2.3 (192.168.2.3) 56(84) bytes of data.
+64 bytes from 192.168.2.3: icmp_seq=1 ttl=64 time=0.265 ms
+64 bytes from 192.168.2.3: icmp_seq=2 ttl=64 time=0.150 ms
+64 bytes from 192.168.2.3: icmp_seq=3 ttl=64 time=0.156 ms
+64 bytes from 192.168.2.3: icmp_seq=4 ttl=64 time=0.219 ms
+
+--- 192.168.2.3 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 2997ms
+rtt min/avg/max/mdev = 0.150/0.197/0.265/0.049 ms
+PING 192.168.2.4 (192.168.2.4) 56(84) bytes of data.
+64 bytes from 192.168.2.4: icmp_seq=1 ttl=64 time=0.384 ms
+64 bytes from 192.168.2.4: icmp_seq=2 ttl=64 time=0.351 ms
+64 bytes from 192.168.2.4: icmp_seq=3 ttl=64 time=0.360 ms
+64 bytes from 192.168.2.4: icmp_seq=4 ttl=64 time=0.453 ms
+
+--- 192.168.2.4 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 2999ms
+rtt min/avg/max/mdev = 0.351/0.387/0.453/0.039 ms

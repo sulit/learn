@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>tab test</title>
+<style type="text/css">
+	.tab {
+	clear: both;
+	margin: 20px auto;
+	padding: 10px;
+	width: 680px;
+	overflow: hidden;
+	}
+	
+	.tab .tab-menu {
+	margin: 0;
+	padding: 0;
+		 list-style: none;
+		 font-size: 15px;
+		 cursor:default
+	}
+	
+	.tab .tab-menu li {
+	display: inline-block;
+	margin: 0 -2px 0 -2px;
+	padding: 0.4em 1em 0 1.5em;
+	text-align: center;
+	color: #fff;
+	background: #6F6F6F;
+	border-radius:5px
+	}			
+	
+	.tab .tab-menu li {
+	width:35px
+	}
+	
+	.tab .tab-menu .active {
+	padding-bottom: 2px;
+	font-weight: bold;
+	color: white;
+	background: #008000;
+	}
+	
+	.tab .tab-panel {
+		padding-bottom: 200px;
+	border: 1px solid #8FBC8F;
+	background: #fff;
+	}
+	
+	.tab .tab-panel h2 {
+		font-size: 1em;
+	color: #8FBC8F;
+	}
+	
+	.tab .tab-none {
+	display: none;
+	}
+</style>
+
+<script type="text/javascript">			
+	function Tab(style, scope){
+		this.oItem = this.getByClass(style, scope);
+		this.init();
+	}
+	
+	Tab.prototype = {
+	init: function(){
+		      var that = this, menu, m;
+		      for(var i = 0, len = this.oItem.length; i < len; i++){
+			      menu  = this.oItem[i].getElementsByTagName('li');
+	
+			      for(var j = 0, mLen = menu.length; j < mLen; j++){
+				      m = menu[j];
+				      m.index = j;
+				      m.onmousedown = function(){that.focus(this);}
+			      }
+		      }
+	      },
+	
+	focus: function(o){
+		       var par = o.parentNode.parentNode, panel = par.getElementsByTagName('div'), 
+		       btn = par.getElementsByTagName('li'), len = btn.length;
+	
+		       for(var i = 0; i < len; i++){
+			       btn[i].className = '';
+			       panel[i].className = this.changeClass(panel[i].className, 'tab-none', true);
+		       }
+	
+		       o.className = 'active';
+		       panel[o.index].className = this.changeClass(panel[o.index].className, 'tab-none', false);
+	       },
+	
+	changeClass: function(cl, cl2, add){
+			     var flag;
+			     if(cl.match(cl2) != null) flag = true;
+	
+			     if(add ^ flag) return flag ? cl.replace(cl2, '') : cl += ' ' + cl2;
+			     return cl;
+		     },
+	
+	getByClass: function(cla, obj){
+			    var obj = obj || document, arr = [];
+	
+			    if(document.getElementsByClassName){
+				    return document.getElementsByClassName(cla);
+			    } else {
+				    var all = obj.getElementsByTagName('*');
+	
+				    for(var i = 0, len = all.length; i < len; i++){
+					    if(all[i].className.match(cla) != null) arr.push(all[i]);
+				    }
+	
+				    return arr;
+			    }
+		    }
+	}
+	
+	window.onload = function(){
+		new Tab('tab-menu', null);
+	}
+</script>
+
+</head>
+
+<body>
+<div class="tab">
+<ul class="tab-menu">
+<li class="active">first</li>
+<li>second</li>
+<li>third</li>
+</ul>
+<div class="tab-panel">
+<p>
+	This is first html!
+</p>
+</div>
+<div class="tab-panel tab-none">
+<p>
+	This is second html!
+</p>
+</div>
+<div class="tab-panel tab-none">
+<p>
+	This is third html!
+</p>
+</div>
+</div>
+</body>
+</html>
