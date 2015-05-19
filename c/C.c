@@ -11,9 +11,7 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <time.h>
-
 #include <unistd.h>
-
 
 #define VERSION_STR "0.06"
 #define VERSION_INT_STR "0x00000500"
