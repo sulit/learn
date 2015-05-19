@@ -20,7 +20,6 @@
 	make
 	sudo make modules_install install
 ```
-
 3. readline库是个不错的库，这个可以学习
 
 4. freebsd是个不错的选择，在开源学习方面，可以follow李鑫
@@ -29,7 +28,6 @@
 ```
 	indent -kr -i8 program.c
 ```
-
 6. **注意：**
 
   core文件中可能含有用户信息，不要随便传到网上
