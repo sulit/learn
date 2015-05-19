@@ -16,9 +16,11 @@
 2. linux的新版chrome已经不支持3.17以下的内核，对于我这种使用debian的用户，
 果断下载个最新的长期稳定的3.18.10 kernel，编译换上，我的vimium岂能消亡。
 
+	```
 	make menuconfig
 	make
 	sudo make modules_install install
+	```
 
 3. readline库是个不错的库，这个可以学习
 
@@ -26,7 +28,9 @@
 
 5. 格式化程序文件操作
 
+	```
 	indent -kr -i8 program.c
+	```
 
 6. **注意：**
 
