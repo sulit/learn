@@ -29,3 +29,7 @@
 	```
 
 5. va_start、va_arg、va_end的使用
+
+6. ld.so.conf中可以添加动态库的地址，添加完之后记得ldconfig
+
+7. python的c结构于lua的c api类似
