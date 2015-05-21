@@ -35,3 +35,5 @@
 6. ld.so.conf中可以添加动态库的地址，添加完之后记得ldconfig
 
 7. python的c结构于lua的c api类似
+
+8. makefile中，$@为目标文件，$^为所有依赖文件，$<为第一个依赖文件
