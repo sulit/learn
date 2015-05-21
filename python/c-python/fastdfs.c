@@ -1,3 +1,12 @@
+/*================================================================
+ *   Copyright (C) 2015 All rights reserved.
+ *
+ *   filename:fastdfs.c
+ *   author:sulit sulitsrc@163.com
+ *   modify date,time:2015-05-21 15:27
+ *   discription:
+ *
+ *================================================================*/
 #include <Python.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -377,7 +386,7 @@ static PyMethodDef FDFSMethods[] = {
 	{ NULL, NULL, 0, NULL }
 };
 
-// 模块初始化方法  
+// 模块初始化方法
 PyMODINIT_FUNC initfdfsclient() {
 
 	//初始模块
