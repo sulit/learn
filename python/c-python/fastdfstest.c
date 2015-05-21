@@ -1,9 +1,9 @@
 /*================================================================
  *   Copyright (C) 2015 All rights reserved.
  *
- *   filename:fastdfs.c
+ *   filename:fastdfstest.c
  *   author:sulit sulitsrc@163.com
- *   modify date,time:2015-05-21 15:27
+ *   modify date,time:2015-05-21 17:30
  *   discription:
  *
  *================================================================*/
@@ -22,33 +22,12 @@
 #include "logger.h"
 #include "fdfs_http_shared.h"
 
-int writeToFileCallback(void *arg, const int64_t file_size,
-			const char *data, const int current_size)
-{
-	if (arg == NULL) {
-		return EINVAL;
-	}
+static int fdfs_init(const char *conf_filename);
+static int writeToFileCallback(void *arg, const int64_t file_size,
+			       const char *data, const int current_size);
+static int uploadFileCallback(void *arg, const int64_t file_size,
+			      int sock);
 
-	if (fwrite(data, current_size, 1, (FILE *) arg) != 1) {
-		return errno != 0 ? errno : EIO;
-	}
-
-	return 0;
-}
-
-int uploadFileCallback(void *arg, const int64_t file_size, int sock)
-{
-	int64_t total_send_bytes;
-	char *filename;
-
-	if (arg == NULL) {
-		return EINVAL;
-	}
-
-	filename = (char *) arg;
-	return tcpsendfile(sock, filename, file_size,
-			   g_fdfs_network_timeout, &total_send_bytes);
-}
 
 static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 {
@@ -80,10 +59,7 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	     &upload_typestr))
 		return NULL;
 
-	log_init();
-	g_log_context.log_level = LOG_DEBUG;
-
-	if ((result = fdfs_client_init(conf_filename)) != 0) {
+	if ((result = fdfs_init(conf_filename)) != 0) {
 		return Py_BuildValue("i", result);
 	}
 
@@ -115,7 +91,6 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 
 	store_path_index = 0;
 
-	printf("test\n");
 	{
 		ConnectionInfo storageServers[FDFS_MAX_SERVERS_EACH_GROUP];
 		ConnectionInfo *pServer;
@@ -179,7 +154,6 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	strcpy(meta_list[meta_count].name, "file_size");
 	strcpy(meta_list[meta_count].value, "115120");
 	meta_count++;
-	printf("test1\n");
 
 	file_ext_name = fdfs_get_file_ext_name(local_filename);
 	*group_name = '\0';
@@ -397,10 +371,7 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 	    ("conf_filename: %s, group_name: %s, remote_filename: %s, local_filename: %s\n",
 	     conf_filename, group_name, remote_filename, local_filename);
 
-	log_init();
-	g_log_context.log_level = LOG_DEBUG;
-
-	if ((result = fdfs_client_init(conf_filename)) != 0) {
+	if ((result = fdfs_init(conf_filename)) != 0) {
 		return Py_BuildValue("i", result);
 	}
 
@@ -513,7 +484,7 @@ static PyMethodDef FDFSMethods[] = {
 	{NULL, NULL, 0, NULL}
 };
 
-// 模块初始化方法
+// 模块初始化方法  
 PyMODINIT_FUNC initfdfsclient()
 {
 
@@ -521,4 +492,42 @@ PyMODINIT_FUNC initfdfsclient()
 	PyObject *m = Py_InitModule("fdfsclient", FDFSMethods);
 	if (m == NULL)
 		return;
+}
+
+static int fdfs_init(const char *conf_filename)
+{
+	int result;
+
+	log_init();
+	g_log_context.log_level = LOG_DEBUG;
+
+	return result = fdfs_client_init(conf_filename);
+}
+
+static int writeToFileCallback(void *arg, const int64_t file_size,
+			       const char *data, const int current_size)
+{
+	if (arg == NULL) {
+		return EINVAL;
+	}
+
+	if (fwrite(data, current_size, 1, (FILE *) arg) != 1) {
+		return errno != 0 ? errno : EIO;
+	}
+
+	return 0;
+}
+
+static int uploadFileCallback(void *arg, const int64_t file_size, int sock)
+{
+	int64_t total_send_bytes;
+	char *filename;
+
+	if (arg == NULL) {
+		return EINVAL;
+	}
+
+	filename = (char *) arg;
+	return tcpsendfile(sock, filename, file_size,
+			   g_fdfs_network_timeout, &total_send_bytes);
 }
