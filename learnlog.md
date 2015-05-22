@@ -41,3 +41,7 @@
   http://learnvimscriptthehardway.onefloweroneworld.com/
 
 8. 浪潮之巅
+
+9. 这个网址的有些文章不错
+
+[http://dirlt.com](http://dirlt.com)
