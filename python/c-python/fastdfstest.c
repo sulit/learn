@@ -1,12 +1,3 @@
-/*================================================================
- *   Copyright (C) 2015 All rights reserved.
- *
- *   filename:fastdfstest.c
- *   author:sulit sulitsrc@163.com
- *   modify date,time:2015-05-21 17:30
- *   discription:
- *
- *================================================================*/
 #include <Python.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,12 +15,11 @@
 
 static int fdfs_init(const char *conf_filename);
 static int writeToFileCallback(void *arg, const int64_t file_size,
-			       const char *data, const int current_size);
-static int uploadFileCallback(void *arg, const int64_t file_size,
-			      int sock);
+			const char *data, const int current_size);
+static int uploadFileCallback(void *arg, const int64_t file_size, int sock);
 
 
-static PyObject *fdfs_upload(PyObject * self, PyObject * args)
+static PyObject *fdfs_upload(PyObject *self, PyObject *args)
 {
 	char *conf_filename;
 	char *local_filename;
@@ -54,9 +44,7 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	int store_path_index;
 	FDFSFileInfo file_info;
 
-	if (!PyArg_ParseTuple
-	    (args, "ssz", &conf_filename, &local_filename,
-	     &upload_typestr))
+	if (!PyArg_ParseTuple(args, "ssz",  &conf_filename, &local_filename, &upload_typestr))
 		return NULL;
 
 	if ((result = fdfs_init(conf_filename)) != 0) {
@@ -92,7 +80,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	store_path_index = 0;
 
 	{
-		ConnectionInfo storageServers[FDFS_MAX_SERVERS_EACH_GROUP];
+		ConnectionInfo
+		    storageServers[FDFS_MAX_SERVERS_EACH_GROUP];
 		ConnectionInfo *pServer;
 		ConnectionInfo *pServerEnd;
 		int storage_count;
@@ -104,7 +93,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 		      group_name, &store_path_index)) == 0) {
 			printf
 			    ("tracker_query_storage_store_list_without_group: \n");
-			pServerEnd = storageServers + storage_count;
+			pServerEnd =
+			    storageServers + storage_count;
 			for (pServer = storageServers;
 			     pServer < pServerEnd; pServer++) {
 				printf
@@ -132,10 +122,12 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	}
 
 	printf("group_name=%s, ip_addr=%s, port=%d\n",
-	       group_name, storageServer.ip_addr, storageServer.port);
+	       group_name, storageServer.ip_addr,
+	       storageServer.port);
 
 	if ((pStorageServer =
-	     tracker_connect_server(&storageServer, &result)) == NULL) {
+	     tracker_connect_server(&storageServer,
+				    &result)) == NULL) {
 		fdfs_client_destroy();
 		return Py_BuildValue("i", result);
 	}
@@ -180,7 +172,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 			    (pTrackerServer, pStorageServer,
 			     store_path_index, file_content,
 			     file_size, file_ext_name, meta_list,
-			     meta_count, group_name, remote_filename);
+			     meta_count, group_name,
+			     remote_filename);
 			free(file_content);
 		}
 
@@ -215,12 +208,14 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	if (g_tracker_server_http_port == 80) {
 		*szPortPart = '\0';
 	} else {
-		sprintf(szPortPart, ":%d", g_tracker_server_http_port);
+		sprintf(szPortPart, ":%d",
+			g_tracker_server_http_port);
 	}
 
 	sprintf(file_id, "%s/%s", group_name, remote_filename);
 	url_len = sprintf(file_url, "http://%s%s/%s",
-			  pStorageServer->ip_addr, szPortPart, file_id);
+			  pStorageServer->ip_addr, szPortPart,
+			  file_id);
 	if (g_anti_steal_token) {
 		ts = time(NULL);
 		fdfs_http_gen_token(&g_anti_steal_secret_key,
@@ -232,8 +227,10 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	printf("group_name=%s, remote_filename=%s\n",
 	       group_name, remote_filename);
 
-	fdfs_get_file_info(group_name, remote_filename, &file_info);
-	printf("source ip address: %s\n", file_info.source_ip_addr);
+	fdfs_get_file_info(group_name, remote_filename,
+			   &file_info);
+	printf("source ip address: %s\n",
+	       file_info.source_ip_addr);
 	printf("file timestamp=%s\n",
 	       formatDatetime(file_info.create_timestamp,
 			      "%Y-%m-%d %H:%M:%S", szDatetime,
@@ -250,7 +247,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 		    storage_upload_slave_by_filename
 		    (pTrackerServer, NULL, local_filename,
 		     master_filename, prefix_name, file_ext_name,
-		     meta_list, meta_count, group_name, remote_filename);
+		     meta_list, meta_count, group_name,
+		     remote_filename);
 
 		printf("storage_upload_slave_by_filename\n");
 	} else if (upload_type == FDFS_UPLOAD_BY_BUFF) {
@@ -264,7 +262,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 			    (pTrackerServer, NULL, file_content,
 			     file_size, master_filename,
 			     prefix_name, file_ext_name, meta_list,
-			     meta_count, group_name, remote_filename);
+			     meta_count, group_name,
+			     remote_filename);
 			free(file_content);
 		}
 
@@ -282,7 +281,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 			     uploadFileCallback, local_filename,
 			     file_size, master_filename,
 			     prefix_name, file_ext_name, meta_list,
-			     meta_count, group_name, remote_filename);
+			     meta_count, group_name,
+			     remote_filename);
 		}
 
 		printf("storage_upload_slave_by_callback\n");
@@ -300,12 +300,14 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	if (g_tracker_server_http_port == 80) {
 		*szPortPart = '\0';
 	} else {
-		sprintf(szPortPart, ":%d", g_tracker_server_http_port);
+		sprintf(szPortPart, ":%d",
+			g_tracker_server_http_port);
 	}
 
 	sprintf(file_id, "%s/%s", group_name, remote_filename);
 	url_len = sprintf(file_url, "http://%s%s/%s",
-			  pStorageServer->ip_addr, szPortPart, file_id);
+			  pStorageServer->ip_addr, szPortPart,
+			  file_id);
 	if (g_anti_steal_token) {
 		ts = time(NULL);
 		fdfs_http_gen_token(&g_anti_steal_secret_key,
@@ -317,9 +319,11 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	printf("group_name=%s, remote_filename=%s\n",
 	       group_name, remote_filename);
 
-	fdfs_get_file_info(group_name, remote_filename, &file_info);
+	fdfs_get_file_info(group_name, remote_filename,
+			   &file_info);
 
-	printf("source ip address: %s\n", file_info.source_ip_addr);
+	printf("source ip address: %s\n",
+	       file_info.source_ip_addr);
 	printf("file timestamp=%s\n",
 	       formatDatetime(file_info.create_timestamp,
 			      "%Y-%m-%d %H:%M:%S", szDatetime,
@@ -346,10 +350,10 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 
 	fdfs_client_destroy();
 
-	return Py_BuildValue("(i, s)", result, remote_filename);
+    return Py_BuildValue("(i, s)", result, remote_filename);
 }
 
-static PyObject *fdfs_download(PyObject * self, PyObject * args)
+static PyObject *fdfs_download(PyObject *self, PyObject *args)
 {
 	char *conf_filename;
 	char *local_filename;
@@ -362,14 +366,10 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 	char *file_buff;
 	int64_t file_size;
 
-	if (!PyArg_ParseTuple
-	    (args, "sssz", &conf_filename, &group_name, &remote_filename,
-	     &local_filename))
+	if (!PyArg_ParseTuple(args, "sssz",  &conf_filename, &group_name, &remote_filename, &local_filename))
 		return NULL;
 
-	printf
-	    ("conf_filename: %s, group_name: %s, remote_filename: %s, local_filename: %s\n",
-	     conf_filename, group_name, remote_filename, local_filename);
+	printf("conf_filename: %s, group_name: %s, remote_filename: %s, local_filename: %s\n", conf_filename, group_name, remote_filename, local_filename);
 
 	if ((result = fdfs_init(conf_filename)) != 0) {
 		return Py_BuildValue("i", result);
@@ -384,10 +384,10 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 
 	pStorageServer = NULL;
 	if ((result =
-	     tracker_query_storage_fetch(pTrackerServer,
-					 &storageServer,
-					 group_name,
-					 remote_filename)) != 0) {
+    	tracker_query_storage_fetch(pTrackerServer,
+					&storageServer,
+					group_name,
+					remote_filename)) != 0) {
 		fdfs_client_destroy();
 		printf("tracker_query_storage_fetch fail, "
 		       "group_name=%s, filename=%s, "
@@ -401,22 +401,27 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 	       storageServer.port);
 
 	if ((pStorageServer =
-	     tracker_connect_server(&storageServer, &result)) == NULL) {
+	     tracker_connect_server(&storageServer,
+				    &result)) == NULL) {
 		fdfs_client_destroy();
 		return Py_BuildValue("i", result);
 	}
 
 	if (local_filename != NULL) {
-		if (strcmp(local_filename, "CALLBACK") == 0) {
+		if (strcmp(local_filename, "CALLBACK") ==
+		    0) {
 			FILE *fp;
 			fp = fopen(local_filename, "wb");
 			if (fp == NULL) {
-				result = errno != 0 ? errno : EPERM;
+				result =
+				    errno !=
+				    0 ? errno : EPERM;
 				printf
 				    ("open file \"%s\" fail, "
 				     "errno: %d, error info: %s",
 				     local_filename,
-				     result, STRERROR(result));
+				     result,
+				     STRERROR(result));
 			} else {
 				result =
 				    storage_download_file_ex
@@ -424,7 +429,8 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 				     pStorageServer,
 				     group_name,
 				     remote_filename, 0, 0,
-				     writeToFileCallback, fp, &file_size);
+				     writeToFileCallback,
+				     fp, &file_size);
 				fclose(fp);
 			}
 		} else {
@@ -432,7 +438,8 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 			    storage_download_file_to_file
 			    (pTrackerServer,
 			     pStorageServer, group_name,
-			     remote_filename, local_filename, &file_size);
+			     remote_filename,
+			     local_filename, &file_size);
 		}
 	} else {
 		file_buff = NULL;
@@ -441,16 +448,19 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 		     (pTrackerServer, pStorageServer,
 		      group_name, remote_filename,
 		      &file_buff, &file_size)) == 0) {
-			local_filename = strrchr(remote_filename, '/');
+			local_filename =
+			    strrchr(remote_filename, '/');
 			if (local_filename != NULL) {
 				local_filename++;	//skip /
 			} else {
-				local_filename = remote_filename;
+				local_filename =
+				    remote_filename;
 			}
 
 			result =
 			    writeToFile(local_filename,
-					file_buff, file_size);
+					file_buff,
+					file_size);
 
 			free(file_buff);
 		}
@@ -459,7 +469,8 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 	if (result == 0) {
 		printf("download file success, "
 		       "file size=%" PRId64
-		       ", file save to %s\n", file_size, local_filename);
+		       ", file save to %s\n", file_size,
+		       local_filename);
 	} else {
 		printf("download file fail, "
 		       "error no: %d, error info: %s\n",
@@ -473,20 +484,174 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 	return Py_BuildValue("i", result);
 }
 
+
+static PyObject *fdfs_delete(PyObject *self, PyObject *args)
+{
+	char *conf_filename;
+	ConnectionInfo *pTrackerServer;
+	ConnectionInfo *pStorageServer;
+	int result;
+	ConnectionInfo storageServer;
+	char *group_name;
+	char *remote_filename;
+
+	if (!PyArg_ParseTuple(args, "sss",  &conf_filename, &group_name, &remote_filename))
+		return NULL;
+
+	if ((result = fdfs_init(conf_filename)) != 0) {
+		return Py_BuildValue("i", result);
+	}
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	pStorageServer = NULL;
+
+	result =
+	    tracker_query_storage_update(pTrackerServer,
+					 &storageServer,
+					 group_name,
+					 remote_filename);
+	if ((result =
+	    tracker_query_storage_fetch(pTrackerServer,
+					&storageServer,
+					group_name,
+					remote_filename)) != 0) {
+		fdfs_client_destroy();
+		printf("tracker_query_storage_fetch fail, "
+		       "group_name=%s, filename=%s, "
+		       "error no: %d, error info: %s\n",
+		       group_name, remote_filename,
+		       result, STRERROR(result));
+		return Py_BuildValue("i", result);
+	}
+	if ((pStorageServer =
+	     tracker_connect_server(&storageServer,
+				    &result)) == NULL) {
+		fdfs_client_destroy();
+		return Py_BuildValue("i", result);
+	}
+	if ((result = storage_delete_file(pTrackerServer,
+					  NULL, group_name,
+					  remote_filename))
+	    == 0) {
+		printf("delete file success\n");
+	} else {
+		printf("delete file fail, "
+		       "error no: %d, error info: %s\n",
+		       result, STRERROR(result));
+	}
+
+	tracker_disconnect_server_ex(pStorageServer, true);
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	fdfs_client_destroy();
+
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_getmeta(PyObject *self, PyObject *args)
+{
+	char *conf_filename;
+	ConnectionInfo *pTrackerServer;
+	ConnectionInfo *pStorageServer;
+	int result;
+	ConnectionInfo storageServer;
+	char *group_name;
+	char *remote_filename;
+	int meta_count;
+	int i;
+	FDFSMetaData *pMetaList;
+
+	if (!PyArg_ParseTuple(args, "sss",  &conf_filename, &group_name, &remote_filename))
+		return NULL;
+
+	log_init();
+	g_log_context.log_level = LOG_DEBUG;
+
+	if ((result = fdfs_client_init(conf_filename)) != 0) {
+		return Py_BuildValue("i", result);
+	}
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	pStorageServer = NULL;
+	result =
+	    tracker_query_storage_fetch(pTrackerServer,
+					&storageServer,
+					group_name,
+					remote_filename);
+
+	if (result != 0) {
+		fdfs_client_destroy();
+		printf("tracker_query_storage_fetch fail, "
+		       "group_name=%s, filename=%s, "
+		       "error no: %d, error info: %s\n",
+		       group_name, remote_filename,
+		       result, STRERROR(result));
+		return Py_BuildValue("i", result);
+	}
+
+	printf("storage=%s:%d\n", storageServer.ip_addr,
+	       storageServer.port);
+
+	if ((pStorageServer =
+	     tracker_connect_server(&storageServer,
+				    &result)) == NULL) {
+		fdfs_client_destroy();
+		return Py_BuildValue("i", result);
+	}
+	if ((result = storage_get_metadata(pTrackerServer,
+					   pStorageServer,
+					   group_name,
+					   remote_filename,
+					   &pMetaList,
+					   &meta_count)) ==
+	    0) {
+		printf("get meta data success, "
+		       "meta count=%d\n", meta_count);
+		for (i = 0; i < meta_count; i++) {
+			printf("%s=%s\n",
+			       pMetaList[i].name,
+			       pMetaList[i].value);
+		}
+
+		free(pMetaList);
+	} else {
+		printf("getmeta fail, "
+		       "error no: %d, error info: %s\n",
+		       result, STRERROR(result));
+	}
+
+	tracker_disconnect_server_ex(pStorageServer, true);
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	fdfs_client_destroy();
+
+	return Py_BuildValue("i", result);
+}
 // 方法列表
 static PyMethodDef FDFSMethods[] = {
 
 	//python中注册的函数名
-	{"fdfs_upload", fdfs_upload, METH_VARARGS,
-	 "Execute a shell command."},
-	{"fdfs_download", fdfs_download, METH_VARARGS,
-	 "Execute a shell command."},
-	{NULL, NULL, 0, NULL}
+	{ "fdfs_upload", fdfs_upload, METH_VARARGS, "Execute a shell command." },
+	{ "fdfs_download", fdfs_download, METH_VARARGS, "Execute a shell command." },
+	{ "fdfs_delete", fdfs_delete, METH_VARARGS, "Execute a shell command." },
+	{ "fdfs_getmeta", fdfs_getmeta, METH_VARARGS, "Execute a shell command." },
+	{ NULL, NULL, 0, NULL }
 };
 
 // 模块初始化方法  
-PyMODINIT_FUNC initfdfsclient()
-{
+PyMODINIT_FUNC initfdfsclient() {
 
 	//初始模块
 	PyObject *m = Py_InitModule("fdfsclient", FDFSMethods);
@@ -505,7 +670,7 @@ static int fdfs_init(const char *conf_filename)
 }
 
 static int writeToFileCallback(void *arg, const int64_t file_size,
-			       const char *data, const int current_size)
+			const char *data, const int current_size)
 {
 	if (arg == NULL) {
 		return EINVAL;
