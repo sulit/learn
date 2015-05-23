@@ -8,7 +8,16 @@
  *
  *============================================*/
 
-#include "unp.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+#define MAXLINE 1024
+#define SA struct sockaddr
 
 int
 main(int argc, char *argv[])
@@ -18,29 +27,41 @@ main(int argc, char *argv[])
 	char recvline[MAXLINE + 1];
 	struct sockaddr_in servaddr;
 
-	if (argc != 2)
-		err_quit("usage: a.out <IPaddress>");
+	if (argc != 2) {
+		fprintf(stderr, "usage: a.out <IPaddress>");
+		exit(errno);
+	}
 
-	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-		err_sys("socket error");
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+		fprintf(stderr, "socket error");
+		exit(errno);
+	}
 
 	//bzero(&servaddr, sizeof(servaddr));弃用
 	memset(&servaddr, 0, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons(13);
-	if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0)
-		err_sys("lnet_pton error for %s", argv[1]);
+	if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
+		fprintf(stderr, "lnet_pton error for %s", argv[1]);
+		exit(errno);
+	}
 
-	if (connect(sockfd, (SA *) &servaddr, MAXLINE) > 0)
-		err_sys("connect error");
+	if (connect(sockfd, (SA *) &servaddr, sizeof(servaddr)) < 0) {
+		fprintf(stderr, "connect error");
+		exit(errno);
+	}
 
 	while ((n = read(sockfd, recvline, MAXLINE)) > 0) {
 		recvline[n] = 0;
-		if (fputs(recvline, stdout) == EOF)
-			err_sys("fputs error");
+		if (fputs(recvline, stdout) == EOF) {
+			fprintf(stderr, "fputs error");
+		exit(errno);
+		}
 	}
-	if (n < 0)
-		err_sys("read error");
+	if (n < 0) {
+		fprintf(stderr, "read error%d\n", errno);
+		exit(errno);
+	}
 
 	exit(0);
 }
