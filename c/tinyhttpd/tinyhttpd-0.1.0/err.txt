@@ -1,0 +1,35 @@
+gcc -W -Wall -lsocket -lpthread -o httpd httpd.c
+httpd.c: In function ‘startup’:
+httpd.c:427:53: warning: pointer targets in passing argument 3 of ‘getsockname’ differ in signedness [-Wpointer-sign]
+   if (getsockname(httpd, (struct sockaddr *) &name, &namelen)
+                                                     ^
+In file included from httpd.c:16:0:
+/usr/include/i386-linux-gnu/sys/socket.h:127:12: note: expected ‘socklen_t * __restrict__’ but argument is of type ‘int *’
+ extern int getsockname (int __fd, __SOCKADDR_ARG __addr,
+            ^
+httpd.c: In function ‘main’:
+httpd.c:481:10: warning: pointer targets in passing argument 3 of ‘accept’ differ in signedness [-Wpointer-sign]
+          &client_name_len);
+          ^
+In file included from httpd.c:16:0:
+/usr/include/i386-linux-gnu/sys/socket.h:243:12: note: expected ‘socklen_t * __restrict__’ but argument is of type ‘int *’
+ extern int accept (int __fd, __SOCKADDR_ARG __addr,
+            ^
+httpd.c:486:26: warning: passing argument 3 of ‘pthread_create’ from incompatible pointer type
+       (&newthread, NULL, accept_request, client_sock) != 0)
+                          ^
+In file included from httpd.c:25:0:
+/usr/include/pthread.h:244:12: note: expected ‘void * (*)(void *)’ but argument is of type ‘void (*)(int)’
+ extern int pthread_create (pthread_t *__restrict __newthread,
+            ^
+httpd.c:486:42: warning: passing argument 4 of ‘pthread_create’ makes pointer from integer without a cast
+       (&newthread, NULL, accept_request, client_sock) != 0)
+                                          ^
+In file included from httpd.c:25:0:
+/usr/include/pthread.h:244:12: note: expected ‘void * __restrict__’ but argument is of type ‘int’
+ extern int pthread_create (pthread_t *__restrict __newthread,
+            ^
+/usr/bin/ld: cannot find -lsocket
+collect2: error: ld returned 1 exit status
+Makefile:4: recipe for target 'httpd' failed
+make: *** [httpd] Error 1
