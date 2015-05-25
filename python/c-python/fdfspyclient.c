@@ -22,33 +22,14 @@
 #include "logger.h"
 #include "fdfs_http_shared.h"
 
-int writeToFileCallback(void *arg, const int64_t file_size,
-			const char *data, const int current_size)
-{
-	if (arg == NULL) {
-		return EINVAL;
-	}
-
-	if (fwrite(data, current_size, 1, (FILE *) arg) != 1) {
-		return errno != 0 ? errno : EIO;
-	}
-
-	return 0;
-}
-
-int uploadFileCallback(void *arg, const int64_t file_size, int sock)
-{
-	int64_t total_send_bytes;
-	char *filename;
-
-	if (arg == NULL) {
-		return EINVAL;
-	}
-
-	filename = (char *) arg;
-	return tcpsendfile(sock, filename, file_size,
-			   g_fdfs_network_timeout, &total_send_bytes);
-}
+static int writeToFileCallback(void *arg, const int64_t file_size,
+			       const char *data, const int current_size);
+static int uploadFileCallback(void *arg, const int64_t file_size,
+			      int sock);
+static int list_storages(ConnectionInfo * pTrackerServer,
+			 FDFSGroupStat * pGroupStat);
+static int list_all_groups(ConnectionInfo * pTrackerServer,
+			   const char *group_name);
 
 static PyObject *fdfs_init(PyObject * self, PyObject * args)
 {
@@ -91,23 +72,10 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	FDFSFileInfo file_info;
 
 	if (!PyArg_ParseTuple
-	    (args, "sz", &local_filename,
-	     &upload_typestr))
+	    (args, "sz", &local_filename, &upload_typestr)) {
+		fdfs_client_destroy();
 		return NULL;
-
-	/*
-	if (!PyArg_ParseTuple
-	    (args, "ssz", &conf_filename, &local_filename,
-	     &upload_typestr))
-		return NULL;
-
-	log_init();
-	g_log_context.log_level = LOG_DEBUG;
-
-	if ((result = fdfs_client_init(conf_filename)) != 0) {
-		return Py_BuildValue("i", result);
 	}
-	*/
 
 	pTrackerServer = tracker_get_connection();
 	if (pTrackerServer == NULL) {
@@ -137,7 +105,6 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 
 	store_path_index = 0;
 
-	printf("test\n");
 	{
 		ConnectionInfo storageServers[FDFS_MAX_SERVERS_EACH_GROUP];
 		ConnectionInfo *pServer;
@@ -201,7 +168,6 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	strcpy(meta_list[meta_count].name, "file_size");
 	strcpy(meta_list[meta_count].value, "115120");
 	meta_count++;
-	printf("test1\n");
 
 	file_ext_name = fdfs_get_file_ext_name(local_filename);
 	*group_name = '\0';
@@ -392,7 +358,7 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	tracker_disconnect_server_ex(pStorageServer, true);
 	tracker_disconnect_server_ex(pTrackerServer, true);
 
-	fdfs_client_destroy();
+	//fdfs_client_destroy();
 
 	return Py_BuildValue("(i, s)", result, remote_filename);
 }
@@ -412,31 +378,11 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 
 	if (!PyArg_ParseTuple
 	    (args, "ssz", &group_name, &remote_filename,
-	     &local_filename))
+	     &local_filename)) {
+		fdfs_client_destroy();
+
 		return NULL;
-
-	if (!PyArg_ParseTuple
-	    (args, "ssz", &group_name, &remote_filename,
-	     &local_filename))
-		return NULL;
-
-	/*
-	if (!PyArg_ParseTuple
-	    (args, "sssz", &conf_filename, &group_name, &remote_filename,
-	     &local_filename))
-		return NULL;
-
-	printf
-	    ("conf_filename: %s, group_name: %s, remote_filename: %s, local_filename: %s\n",
-	     conf_filename, group_name, remote_filename, local_filename);
-
-	log_init();
-	g_log_context.log_level = LOG_DEBUG;
-
-	if ((result = fdfs_client_init(conf_filename)) != 0) {
-		return Py_BuildValue("i", result);
 	}
-	*/
 
 	pTrackerServer = tracker_get_connection();
 	if (pTrackerServer == NULL) {
@@ -531,9 +477,789 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 	tracker_disconnect_server_ex(pStorageServer, true);
 	tracker_disconnect_server_ex(pTrackerServer, true);
 
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_delete(PyObject * self, PyObject * args)
+{
+	ConnectionInfo *pTrackerServer;
+	ConnectionInfo *pStorageServer;
+	int result;
+	ConnectionInfo storageServer;
+	char *group_name;
+	char *remote_filename;
+
+	if (!PyArg_ParseTuple(args, "ss", &group_name, &remote_filename)) {
+		fdfs_client_destroy();
+
+		return NULL;
+	}
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	pStorageServer = NULL;
+
+	result =
+	    tracker_query_storage_update(pTrackerServer,
+					 &storageServer,
+					 group_name, remote_filename);
+	if ((result =
+	     tracker_query_storage_fetch(pTrackerServer,
+					 &storageServer,
+					 group_name,
+					 remote_filename)) != 0) {
+		fdfs_client_destroy();
+		printf("tracker_query_storage_fetch fail, "
+		       "group_name=%s, filename=%s, "
+		       "error no: %d, error info: %s\n",
+		       group_name, remote_filename,
+		       result, STRERROR(result));
+		return Py_BuildValue("i", result);
+	}
+	if ((pStorageServer =
+	     tracker_connect_server(&storageServer, &result)) == NULL) {
+		fdfs_client_destroy();
+		return Py_BuildValue("i", result);
+	}
+	if ((result = storage_delete_file(pTrackerServer,
+					  NULL, group_name,
+					  remote_filename))
+	    == 0) {
+		printf("delete file success\n");
+	} else {
+		printf("delete file fail, "
+		       "error no: %d, error info: %s\n",
+		       result, STRERROR(result));
+	}
+
+	tracker_disconnect_server_ex(pStorageServer, true);
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_getmeta(PyObject * self, PyObject * args)
+{
+	ConnectionInfo *pTrackerServer;
+	ConnectionInfo *pStorageServer;
+	int result;
+	ConnectionInfo storageServer;
+	char *group_name;
+	char *remote_filename;
+	int meta_count;
+	int i;
+	FDFSMetaData *pMetaList;
+
+	if (!PyArg_ParseTuple(args, "ss", &group_name, &remote_filename)) {
+		fdfs_client_destroy();
+
+		return NULL;
+	}
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	pStorageServer = NULL;
+	result =
+	    tracker_query_storage_fetch(pTrackerServer,
+					&storageServer,
+					group_name, remote_filename);
+
+	if (result != 0) {
+		fdfs_client_destroy();
+		printf("tracker_query_storage_fetch fail, "
+		       "group_name=%s, filename=%s, "
+		       "error no: %d, error info: %s\n",
+		       group_name, remote_filename,
+		       result, STRERROR(result));
+		return Py_BuildValue("i", result);
+	}
+
+	printf("storage=%s:%d\n", storageServer.ip_addr,
+	       storageServer.port);
+
+	if ((pStorageServer =
+	     tracker_connect_server(&storageServer, &result)) == NULL) {
+		fdfs_client_destroy();
+		return Py_BuildValue("i", result);
+	}
+	if ((result = storage_get_metadata(pTrackerServer,
+					   pStorageServer,
+					   group_name,
+					   remote_filename,
+					   &pMetaList,
+					   &meta_count)) == 0) {
+		printf("get meta data success, "
+		       "meta count=%d\n", meta_count);
+		for (i = 0; i < meta_count; i++) {
+			printf("%s=%s\n",
+			       pMetaList[i].name, pMetaList[i].value);
+		}
+
+		free(pMetaList);
+	} else {
+		printf("getmeta fail, "
+		       "error no: %d, error info: %s\n",
+		       result, STRERROR(result));
+	}
+
+	tracker_disconnect_server_ex(pStorageServer, true);
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_setmeta(PyObject * self, PyObject * args)
+{
+	ConnectionInfo *pTrackerServer;
+	ConnectionInfo *pStorageServer;
+	int result;
+	ConnectionInfo storageServer;
+	char *group_name;
+	char *remote_filename;
+	int meta_count;
+	FDFSMetaData *pMetaList;
+	char *meta_buff;
+	char *op_flag;
+
+	if (!PyArg_ParseTuple
+	    (args, "ssss", &group_name, &remote_filename, &op_flag,
+	     &meta_buff)) {
+		printf("args:" "<group_name> <remote_filename> "
+		       "<op_flag> <metadata_list>\n"
+		       "\top_flag: %c for overwrite, " "%c for merge\n"
+		       "\tmetadata_list: name1=value1,"
+		       "name2=value2,...\n",
+		       STORAGE_SET_METADATA_FLAG_OVERWRITE,
+		       STORAGE_SET_METADATA_FLAG_MERGE);
+
+		fdfs_client_destroy();
+		return NULL;
+	}
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	pStorageServer = NULL;
+	if ((result = tracker_query_storage_update(pTrackerServer,
+						   &storageServer,
+						   group_name,
+						   remote_filename)) !=
+	    0) {
+
+		fdfs_client_destroy();
+		printf("tracker_query_storage_fetch fail, "
+		       "group_name=%s, filename=%s, "
+		       "error no: %d, error info: %s\n",
+		       group_name, remote_filename,
+		       result, STRERROR(result));
+		return Py_BuildValue("i", result);
+	}
+
+	printf("storage=%s:%d\n", storageServer.ip_addr,
+	       storageServer.port);
+
+	if ((pStorageServer =
+	     tracker_connect_server(&storageServer, &result)) == NULL) {
+		fdfs_client_destroy();
+		return Py_BuildValue("i", result);
+	}
+	pMetaList = fdfs_split_metadata_ex(meta_buff,
+					   ',', '=', &meta_count, &result);
+	if (pMetaList == NULL) {
+		printf("Out of memory!\n");
+		return Py_BuildValue("i", ENOMEM);
+	}
+
+	if ((result = storage_set_metadata(pTrackerServer,
+					   NULL,
+					   group_name,
+					   remote_filename,
+					   pMetaList,
+					   meta_count, *op_flag)) == 0) {
+		printf("set meta data success\n");
+	} else {
+		printf("setmeta fail, "
+		       "error no: %d, error info: %s\n",
+		       result, STRERROR(result));
+	}
+
+	free(pMetaList);
+
+	tracker_disconnect_server_ex(pStorageServer, true);
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_query_servers(PyObject * self, PyObject * args)
+{
+	int result;
+	char *group_name;
+	char *remote_filename;
+	ConnectionInfo *pTrackerServer;
+	int i;
+
+	if (!PyArg_ParseTuple(args, "ss", &group_name, &remote_filename)) {
+		fdfs_client_destroy();
+		return NULL;
+	}
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	ConnectionInfo storageServers[FDFS_MAX_SERVERS_EACH_GROUP];
+	int server_count;
+
+	result = tracker_query_storage_list(pTrackerServer,
+					    storageServers,
+					    FDFS_MAX_SERVERS_EACH_GROUP,
+					    &server_count,
+					    group_name, remote_filename);
+
+	if (result != 0) {
+		printf("tracker_query_storage_list fail, "
+		       "group_name=%s, filename=%s, "
+		       "error no: %d, error info: %s\n",
+		       group_name, remote_filename,
+		       result, STRERROR(result));
+	} else {
+		printf("server list (%d):\n", server_count);
+		for (i = 0; i < server_count; i++) {
+			printf("\t%s:%d\n",
+			       storageServers[i].ip_addr,
+			       storageServers[i].port);
+		}
+		printf("\n");
+	}
+
+	tracker_disconnect_server_ex(pTrackerServer, result != 0);
 	fdfs_client_destroy();
 
 	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_append_file(PyObject * self, PyObject * args)
+{
+	char *local_filename;
+	ConnectionInfo *pTrackerServer;
+	int result;
+	char *appender_file_id;
+
+	if (!PyArg_ParseTuple
+	    (args, "ss", &appender_file_id, &local_filename)) {
+		fdfs_client_destroy();
+		return NULL;
+	}
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	if ((result = storage_append_by_filename1(pTrackerServer,
+						  NULL, local_filename,
+						  appender_file_id)) !=
+	    0) {
+		printf("append file fail, "
+		       "error no: %d, error info: %s\n", result,
+		       STRERROR(result));
+		return Py_BuildValue("i", result);
+	}
+
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_file_info(PyObject * self, PyObject * args)
+{
+	char *file_id;
+	int result;
+	FDFSFileInfo file_info;
+
+	if (!PyArg_ParseTuple(args, "s", &file_id)) {
+		fdfs_client_destroy();
+		return NULL;
+	}
+
+	ignore_signal_pipe();
+
+	memset(&file_info, 0, sizeof(file_info));
+	result = fdfs_get_file_info_ex1(file_id, true, &file_info);
+	if (result != 0) {
+		printf("query file info fail, "
+		       "error no: %d, error info: %s\n",
+		       result, STRERROR(result));
+	} else {
+		char szDatetime[32];
+
+		printf("source storage id: %d\n", file_info.source_id);
+		printf("source ip address: %s\n",
+		       file_info.source_ip_addr);
+		printf("file create timestamp: %s\n",
+		       formatDatetime(file_info.create_timestamp,
+				      "%Y-%m-%d %H:%M:%S", szDatetime,
+				      sizeof(szDatetime)));
+		printf("file size: %" PRId64 "\n", file_info.file_size);
+		printf("file crc32: %u (0x%08X)\n",
+		       file_info.crc32, file_info.crc32);
+	}
+
+	tracker_close_all_connections();
+
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_upload_append(PyObject * self, PyObject * args)
+{
+	char *local_filename;
+	char group_name[FDFS_GROUP_NAME_MAX_LEN + 1];
+	ConnectionInfo *pTrackerServer;
+	int result;
+	int store_path_index;
+	ConnectionInfo storageServer;
+	char file_id[128];
+
+	if (!PyArg_ParseTuple(args, "s", &local_filename)) {
+		fdfs_client_destroy();
+		return NULL;
+	}
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+
+	store_path_index = 0;
+	if ((result = tracker_query_storage_store(pTrackerServer,
+						  &storageServer,
+						  group_name,
+						  &store_path_index)) !=
+	    0) {
+		fdfs_client_destroy();
+		fprintf(stderr, "tracker_query_storage fail, "
+			"error no: %d, error info: %s\n",
+			result, STRERROR(result));
+		return Py_BuildValue("i", result);
+	}
+
+	result = storage_upload_appender_by_filename1(pTrackerServer,
+						      &storageServer,
+						      store_path_index,
+						      local_filename, NULL,
+						      NULL, 0, group_name,
+						      file_id);
+	if (result != 0) {
+		fprintf(stderr, "upload file fail, "
+			"error no: %d, error info: %s\n",
+			result, STRERROR(result));
+
+		tracker_disconnect_server_ex(pTrackerServer, true);
+		fdfs_client_destroy();
+		return Py_BuildValue("i", result);
+	}
+
+	printf("%s\n", file_id);
+
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	return 0;
+}
+
+static PyObject *fdfs_list_all_groups(PyObject * self, PyObject * args)
+{
+	ConnectionInfo *pTrackerServer;
+	int result;
+	char *tracker_server;
+	char *group_name;
+
+	if (!PyArg_ParseTuple(args, "zz", &tracker_server, &group_name)) {
+		fdfs_client_destroy();
+		return NULL;
+	}
+
+	if (tracker_server == NULL) {
+		if (g_tracker_group.server_count > 1) {
+			srand(time(NULL));
+			rand();	//discard the first
+			g_tracker_group.server_index =
+			    (int) ((g_tracker_group.server_count *
+				    (double) rand())
+				   / (double)
+				   RAND_MAX);
+		}
+	} else {
+		int i;
+		char ip_addr[IP_ADDRESS_SIZE];
+
+		*ip_addr = '\0';
+		if (getIpaddrByName
+		    (tracker_server, ip_addr, sizeof(ip_addr))
+		    == INADDR_NONE) {
+			printf("resolve ip address of tracker server: %s "
+			       "fail!\n", tracker_server);
+			return Py_BuildValue("i", 2);
+		}
+
+		for (i = 0; i < g_tracker_group.server_count; i++) {
+			if (strcmp(g_tracker_group.servers[i].ip_addr,
+				   ip_addr) == 0) {
+				g_tracker_group.server_index = i;
+				break;
+			}
+		}
+
+		if (i == g_tracker_group.server_count) {
+			printf("tracker server: %s not exists!\n",
+			       tracker_server);
+			return Py_BuildValue("i", 2);
+		}
+	}
+
+	printf("server_count=%d, server_index=%d\n",
+	       g_tracker_group.server_count, g_tracker_group.server_index);
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+	printf("\ntracker server is %s:%d\n\n", pTrackerServer->ip_addr,
+	       pTrackerServer->port);
+
+
+	if (group_name == NULL) {
+		result = list_all_groups(pTrackerServer, NULL);
+	} else {
+		result = list_all_groups(pTrackerServer, group_name);
+	}
+
+	tracker_disconnect_server_ex(pTrackerServer, true);
+
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_delete_group(PyObject * self, PyObject * args)
+{
+	ConnectionInfo *pTrackerServer;
+	int result;
+	char *tracker_server;
+	char *group_name;
+
+	if (!PyArg_ParseTuple(args, "zs", &tracker_server, &group_name)) {
+		fdfs_client_destroy();
+		return NULL;
+	}
+
+	if (tracker_server == NULL) {
+		if (g_tracker_group.server_count > 1) {
+			srand(time(NULL));
+			rand();	//discard the first
+			g_tracker_group.server_index =
+			    (int) ((g_tracker_group.server_count *
+				    (double) rand())
+				   / (double)
+				   RAND_MAX);
+		}
+	} else {
+		int i;
+		char ip_addr[IP_ADDRESS_SIZE];
+
+		*ip_addr = '\0';
+		if (getIpaddrByName
+		    (tracker_server, ip_addr, sizeof(ip_addr))
+		    == INADDR_NONE) {
+			printf("resolve ip address of tracker server: %s "
+			       "fail!\n", tracker_server);
+			return Py_BuildValue("i", 2);
+		}
+
+		for (i = 0; i < g_tracker_group.server_count; i++) {
+			if (strcmp(g_tracker_group.servers[i].ip_addr,
+				   ip_addr) == 0) {
+				g_tracker_group.server_index = i;
+				break;
+			}
+		}
+
+		if (i == g_tracker_group.server_count) {
+			printf("tracker server: %s not exists!\n",
+			       tracker_server);
+			return Py_BuildValue("i", 2);
+		}
+	}
+
+	printf("server_count=%d, server_index=%d\n",
+	       g_tracker_group.server_count, g_tracker_group.server_index);
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+	printf("\ntracker server is %s:%d\n\n", pTrackerServer->ip_addr,
+	       pTrackerServer->port);
+
+	if ((result =
+	     tracker_delete_group(&g_tracker_group, group_name)) == 0) {
+		printf("delete group: %s success\n", group_name);
+	} else {
+		printf("delete group: %s fail, "
+		       "error no: %d, error info: %s\n",
+		       group_name, result, STRERROR(result));
+	}
+
+	tracker_disconnect_server_ex(pTrackerServer, true);
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_delete_server(PyObject * self, PyObject * args)
+{
+	ConnectionInfo *pTrackerServer;
+	int result;
+	char *tracker_server;
+	char *storage_id;
+	char *group_name;
+
+	if (!PyArg_ParseTuple(args, "zss", &tracker_server, &group_name, &storage_id)) {
+		fdfs_client_destroy();
+		return NULL;
+	}
+
+	if (tracker_server == NULL) {
+		if (g_tracker_group.server_count > 1) {
+			srand(time(NULL));
+			rand();	//discard the first
+			g_tracker_group.server_index =
+			    (int) ((g_tracker_group.server_count *
+				    (double) rand())
+				   / (double)
+				   RAND_MAX);
+		}
+	} else {
+		int i;
+		char ip_addr[IP_ADDRESS_SIZE];
+
+		*ip_addr = '\0';
+		if (getIpaddrByName
+		    (tracker_server, ip_addr, sizeof(ip_addr))
+		    == INADDR_NONE) {
+			printf("resolve ip address of tracker server: %s "
+			       "fail!\n", tracker_server);
+			return Py_BuildValue("i", 2);
+		}
+
+		for (i = 0; i < g_tracker_group.server_count; i++) {
+			if (strcmp(g_tracker_group.servers[i].ip_addr,
+				   ip_addr) == 0) {
+				g_tracker_group.server_index = i;
+				break;
+			}
+		}
+
+		if (i == g_tracker_group.server_count) {
+			printf("tracker server: %s not exists!\n",
+			       tracker_server);
+			return Py_BuildValue("i", 2);
+		}
+	}
+
+	printf("server_count=%d, server_index=%d\n",
+	       g_tracker_group.server_count, g_tracker_group.server_index);
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		result = errno != 0 ? errno : ECONNREFUSED;
+		return Py_BuildValue("i", result);
+	}
+	printf("\ntracker server is %s:%d\n\n", pTrackerServer->ip_addr,
+	       pTrackerServer->port);
+
+	if ((result =
+	     tracker_delete_storage(&g_tracker_group,
+				    group_name, storage_id)) == 0) {
+		printf
+		    ("delete storage server %s::%s success\n",
+		     group_name, storage_id);
+	} else {
+		printf
+		    ("delete storage server %s::%s fail, "
+		     "error no: %d, error info: %s\n",
+		     group_name, storage_id, result, STRERROR(result));
+	}
+
+	tracker_disconnect_server_ex(pTrackerServer, true);
+	return Py_BuildValue("i", result);
+}
+
+static PyObject *fdfs_set_trunk_server(PyObject * self, PyObject * args)
+{
+	char *conf_filename;
+	int result;
+	char *op_type;
+	char *tracker_server;
+	int arg_index;
+	char *group_name;
+	char *storage_id;
+	char new_trunk_server_id[FDFS_STORAGE_ID_MAX_SIZE];
+
+	if (tracker_server == NULL) {
+		if (g_tracker_group.server_count > 1) {
+			srand(time(NULL));
+			rand();	//discard the first
+			g_tracker_group.server_index = (int) ((g_tracker_group.server_count * (double) rand())
+							      /
+							      (double)
+							      RAND_MAX);
+		}
+	} else {
+		int i;
+		char ip_addr[IP_ADDRESS_SIZE];
+
+		*ip_addr = '\0';
+		if (getIpaddrByName
+		    (tracker_server, ip_addr, sizeof(ip_addr))
+		    == INADDR_NONE) {
+			printf("resolve ip address of tracker server: %s "
+			       "fail!\n", tracker_server);
+			return 2;
+		}
+
+		for (i = 0; i < g_tracker_group.server_count; i++) {
+			if (strcmp(g_tracker_group.servers[i].ip_addr,
+				   ip_addr) == 0) {
+				g_tracker_group.server_index = i;
+				break;
+			}
+		}
+
+		if (i == g_tracker_group.server_count) {
+			printf("tracker server: %s not exists!\n",
+			       tracker_server);
+			return 2;
+		}
+	}
+
+	printf("server_count=%d, server_index=%d\n",
+	       g_tracker_group.server_count, g_tracker_group.server_index);
+
+	pTrackerServer = tracker_get_connection();
+	if (pTrackerServer == NULL) {
+		fdfs_client_destroy();
+		return errno != 0 ? errno : ECONNREFUSED;
+	}
+	printf("\ntracker server is %s:%d\n\n", pTrackerServer->ip_addr,
+	       pTrackerServer->port);
+
+	if (arg_index < argc) {
+		group_name = argv[arg_index++];
+	} else {
+		group_name = NULL;
+	}
+
+	if (strcmp(op_type, "list") == 0) {
+		if (group_name == NULL) {
+			result = list_all_groups(NULL);
+		} else {
+			result = list_all_groups(group_name);
+		}
+	} else if (strcmp(op_type, "delete") == 0) {
+		if (arg_index >= argc) {
+			if ((result =
+			     tracker_delete_group(&g_tracker_group,
+						  group_name)) == 0) {
+				printf("delete group: %s success\n",
+				       group_name);
+			} else {
+				printf("delete group: %s fail, "
+				       "error no: %d, error info: %s\n",
+				       group_name, result,
+				       STRERROR(result));
+			}
+		} else {
+			char *storage_id;
+
+			storage_id = argv[arg_index++];
+			if ((result =
+			     tracker_delete_storage(&g_tracker_group,
+						    group_name,
+						    storage_id)) == 0) {
+				printf
+				    ("delete storage server %s::%s success\n",
+				     group_name, storage_id);
+			} else {
+				printf
+				    ("delete storage server %s::%s fail, "
+				     "error no: %d, error info: %s\n",
+				     group_name, storage_id, result,
+				     STRERROR(result));
+			}
+		}
+	} else if (strcmp(op_type, "set_trunk_server") == 0) {
+		char *storage_id;
+		char new_trunk_server_id[FDFS_STORAGE_ID_MAX_SIZE];
+
+		if (group_name == NULL) {
+			usage(argv);
+			return 1;
+		}
+		if (arg_index >= argc) {
+			storage_id = "";
+		} else {
+			storage_id = argv[arg_index++];
+		}
+
+		if ((result = tracker_set_trunk_server(&g_tracker_group,
+						       group_name,
+						       storage_id,
+						       new_trunk_server_id))
+		    == 0) {
+			printf("set trunk server %s::%s success, "
+			       "new trunk server: %s\n", group_name,
+			       storage_id, new_trunk_server_id);
+		} else {
+			printf("set trunk server %s::%s fail, "
+			       "error no: %d, error info: %s\n",
+			       group_name, storage_id,
+			       result, STRERROR(result));
+		}
+	} else {
+		printf("Invalid command %s\n\n", op_type);
+		usage(argv);
+	}
+
+	tracker_disconnect_server_ex(pTrackerServer, true);
+	fdfs_client_destroy();
+	return 0;
+}
+
+static PyObject *fdfs_destroy(PyObject * self)
+{
+	fdfs_client_destroy();
+	return Py_BuildValue("s", "client exited");
 }
 
 // 方法列表
@@ -541,11 +1267,37 @@ static PyMethodDef FDFSMethods[] = {
 
 	//python中注册的函数名
 	{"fdfs_init", fdfs_init, METH_VARARGS,
-	 "Execute a shell command."},
+	 "fdfsclient init."},
 	{"fdfs_upload", fdfs_upload, METH_VARARGS,
-	 "Execute a shell command."},
+	 "fdfsclient upload."},
 	{"fdfs_download", fdfs_download, METH_VARARGS,
-	 "Execute a shell command."},
+	 "fdfsclient download."},
+	{"fdfs_delete", fdfs_delete, METH_VARARGS,
+	 "fdfsclient delete."},
+	{"fdfs_getmeta", fdfs_getmeta, METH_VARARGS,
+	 "fdfsclient getmeta."},
+	{"fdfs_setmeta", fdfs_setmeta, METH_VARARGS,
+	 "fdfsclient setmeta."},
+	{"fdfs_query_servers", fdfs_query_servers, METH_VARARGS,
+	 "fdfsclient query servers."},
+	{"fdfs_append_file", fdfs_append_file, METH_VARARGS,
+	 "fdfsclient append file."},
+	{"fdfs_upload_append", fdfs_upload_append, METH_VARARGS,
+	 "fdfsclient upload append."},
+	{"fdfs_file_info", fdfs_file_info, METH_VARARGS,
+	 "fdfsclient file info."},
+	{"fdfs_list_all_groups", fdfs_list_all_groups, METH_VARARGS,
+	 "fdfsclient list all groups or one group."},
+	//{"fdfs_list_storages",  fdfs_list_storages, METH_VARARGS,
+	// "fdfsclient list storages."},
+	{"fdfs_delete_group", fdfs_delete_group, METH_VARARGS,
+	 "fdfsclient delete one group."},
+	{"fdfs_delete_server", fdfs_delete_server, METH_VARARGS,
+	 "fdfsclient delete one storages server."},
+	{"fdfs_set_trunk_server", fdfs_set_trunk_server, METH_VARARGS,
+	 "fdfsclient set trunk server."},
+	{"fdfs_destroy", (PyCFunction) fdfs_destroy, METH_NOARGS,
+	 "fdfsclient destroy."},
 	{NULL, NULL, 0, NULL}
 };
 
@@ -559,3 +1311,341 @@ PyMODINIT_FUNC initfdfspyclient()
 		return;
 }
 
+static int writeToFileCallback(void *arg, const int64_t file_size,
+			       const char *data, const int current_size)
+{
+	if (arg == NULL) {
+		return EINVAL;
+	}
+
+	if (fwrite(data, current_size, 1, (FILE *) arg) != 1) {
+		return errno != 0 ? errno : EIO;
+	}
+
+	return 0;
+}
+
+static int uploadFileCallback(void *arg, const int64_t file_size, int sock)
+{
+	int64_t total_send_bytes;
+	char *filename;
+
+	if (arg == NULL) {
+		return EINVAL;
+	}
+
+	filename = (char *) arg;
+	return tcpsendfile(sock, filename, file_size,
+			   g_fdfs_network_timeout, &total_send_bytes);
+}
+
+static int list_storages(ConnectionInfo * pTrackerServer,
+			 FDFSGroupStat * pGroupStat)
+{
+	int result;
+	int storage_count;
+	FDFSStorageInfo storage_infos[FDFS_MAX_SERVERS_EACH_GROUP];
+	FDFSStorageInfo *p;
+	FDFSStorageInfo *pStorage;
+	FDFSStorageInfo *pStorageEnd;
+	FDFSStorageStat *pStorageStat;
+	char szJoinTime[32];
+	char szUpTime[32];
+	char szLastHeartBeatTime[32];
+	char szSrcUpdTime[32];
+	char szSyncUpdTime[32];
+	char szSyncedTimestamp[32];
+	char szSyncedDelaySeconds[128];
+	char szHostname[128];
+	char szHostnamePrompt[128 + 8];
+	int k;
+	int max_last_source_update;
+
+	printf("group name = %s\n"
+	       "disk total space = %" PRId64 " MB\n"
+	       "disk free space = %" PRId64 " MB\n"
+	       "trunk free space = %" PRId64 " MB\n"
+	       "storage server count = %d\n"
+	       "active server count = %d\n"
+	       "storage server port = %d\n"
+	       "storage HTTP port = %d\n"
+	       "store path count = %d\n"
+	       "subdir count per path = %d\n"
+	       "current write server index = %d\n"
+	       "current trunk file id = %d\n\n",
+	       pGroupStat->group_name,
+	       pGroupStat->total_mb,
+	       pGroupStat->free_mb,
+	       pGroupStat->trunk_free_mb,
+	       pGroupStat->count,
+	       pGroupStat->active_count,
+	       pGroupStat->storage_port,
+	       pGroupStat->storage_http_port,
+	       pGroupStat->store_path_count,
+	       pGroupStat->subdir_count_per_path,
+	       pGroupStat->current_write_server,
+	       pGroupStat->current_trunk_file_id);
+
+	result = tracker_list_servers(pTrackerServer,
+				      pGroupStat->group_name, NULL,
+				      storage_infos,
+				      FDFS_MAX_SERVERS_EACH_GROUP,
+				      &storage_count);
+	if (result != 0) {
+		return result;
+	}
+
+	k = 0;
+	pStorageEnd = storage_infos + storage_count;
+	for (pStorage = storage_infos; pStorage < pStorageEnd; pStorage++) {
+		max_last_source_update = 0;
+		for (p = storage_infos; p < pStorageEnd; p++) {
+			if (p != pStorage && p->stat.last_source_update
+			    > max_last_source_update) {
+				max_last_source_update =
+				    p->stat.last_source_update;
+			}
+		}
+
+		pStorageStat = &(pStorage->stat);
+		if (max_last_source_update == 0) {
+			*szSyncedDelaySeconds = '\0';
+		} else {
+			if (pStorageStat->last_synced_timestamp == 0) {
+				strcpy(szSyncedDelaySeconds,
+				       "(never synced)");
+			} else {
+				int delay_seconds;
+				int remain_seconds;
+				int day;
+				int hour;
+				int minute;
+				int second;
+				char szDelayTime[64];
+
+				delay_seconds =
+				    (int) (max_last_source_update -
+					   pStorageStat->last_synced_timestamp);
+				day = delay_seconds / (24 * 3600);
+				remain_seconds =
+				    delay_seconds % (24 * 3600);
+				hour = remain_seconds / 3600;
+				remain_seconds %= 3600;
+				minute = remain_seconds / 60;
+				second = remain_seconds % 60;
+
+				if (day != 0) {
+					sprintf(szDelayTime, "%d days "
+						"%02dh:%02dm:%02ds",
+						day, hour, minute, second);
+				} else if (hour != 0) {
+					sprintf(szDelayTime,
+						"%02dh:%02dm:%02ds", hour,
+						minute, second);
+				} else if (minute != 0) {
+					sprintf(szDelayTime, "%02dm:%02ds",
+						minute, second);
+				} else {
+					sprintf(szDelayTime, "%ds",
+						second);
+				}
+
+				sprintf(szSyncedDelaySeconds, "(%s delay)",
+					szDelayTime);
+			}
+		}
+
+		getHostnameByIp(pStorage->ip_addr, szHostname,
+				sizeof(szHostname));
+		if (*szHostname != '\0') {
+			sprintf(szHostnamePrompt, " (%s)", szHostname);
+		} else {
+			*szHostnamePrompt = '\0';
+		}
+
+		if (pStorage->up_time != 0) {
+			formatDatetime(pStorage->up_time,
+				       "%Y-%m-%d %H:%M:%S",
+				       szUpTime, sizeof(szUpTime));
+		} else {
+			*szUpTime = '\0';
+		}
+
+		printf("\tStorage %d:\n"
+		       "\t\tid = %s\n"
+		       "\t\tip_addr = %s%s  %s\n"
+		       "\t\thttp domain = %s\n"
+		       "\t\tversion = %s\n"
+		       "\t\tjoin time = %s\n"
+		       "\t\tup time = %s\n"
+		       "\t\ttotal storage = %d MB\n"
+		       "\t\tfree storage = %d MB\n"
+		       "\t\tupload priority = %d\n"
+		       "\t\tstore_path_count = %d\n"
+		       "\t\tsubdir_count_per_path = %d\n"
+		       "\t\tstorage_port = %d\n"
+		       "\t\tstorage_http_port = %d\n"
+		       "\t\tcurrent_write_path = %d\n"
+		       "\t\tsource storage id = %s\n"
+		       "\t\tif_trunk_server = %d\n"
+		       "\t\tconnection.alloc_count = %d\n"
+		       "\t\tconnection.current_count = %d\n"
+		       "\t\tconnection.max_count = %d\n"
+		       "\t\ttotal_upload_count = %" PRId64 "\n"
+		       "\t\tsuccess_upload_count = %" PRId64 "\n"
+		       "\t\ttotal_append_count = %" PRId64 "\n"
+		       "\t\tsuccess_append_count = %" PRId64 "\n"
+		       "\t\ttotal_modify_count = %" PRId64 "\n"
+		       "\t\tsuccess_modify_count = %" PRId64 "\n"
+		       "\t\ttotal_truncate_count = %" PRId64 "\n"
+		       "\t\tsuccess_truncate_count = %" PRId64 "\n"
+		       "\t\ttotal_set_meta_count = %" PRId64 "\n"
+		       "\t\tsuccess_set_meta_count = %" PRId64 "\n"
+		       "\t\ttotal_delete_count = %" PRId64 "\n"
+		       "\t\tsuccess_delete_count = %" PRId64 "\n"
+		       "\t\ttotal_download_count = %" PRId64 "\n"
+		       "\t\tsuccess_download_count = %" PRId64 "\n"
+		       "\t\ttotal_get_meta_count = %" PRId64 "\n"
+		       "\t\tsuccess_get_meta_count = %" PRId64 "\n"
+		       "\t\ttotal_create_link_count = %" PRId64 "\n"
+		       "\t\tsuccess_create_link_count = %" PRId64 "\n"
+		       "\t\ttotal_delete_link_count = %" PRId64 "\n"
+		       "\t\tsuccess_delete_link_count = %" PRId64 "\n"
+		       "\t\ttotal_upload_bytes = %" PRId64 "\n"
+		       "\t\tsuccess_upload_bytes = %" PRId64 "\n"
+		       "\t\ttotal_append_bytes = %" PRId64 "\n"
+		       "\t\tsuccess_append_bytes = %" PRId64 "\n"
+		       "\t\ttotal_modify_bytes = %" PRId64 "\n"
+		       "\t\tsuccess_modify_bytes = %" PRId64 "\n"
+		       "\t\tstotal_download_bytes = %" PRId64 "\n"
+		       "\t\tsuccess_download_bytes = %" PRId64 "\n"
+		       "\t\ttotal_sync_in_bytes = %" PRId64 "\n"
+		       "\t\tsuccess_sync_in_bytes = %" PRId64 "\n"
+		       "\t\ttotal_sync_out_bytes = %" PRId64 "\n"
+		       "\t\tsuccess_sync_out_bytes = %" PRId64 "\n"
+		       "\t\ttotal_file_open_count = %" PRId64 "\n"
+		       "\t\tsuccess_file_open_count = %" PRId64 "\n"
+		       "\t\ttotal_file_read_count = %" PRId64 "\n"
+		       "\t\tsuccess_file_read_count = %" PRId64 "\n"
+		       "\t\ttotal_file_write_count = %" PRId64 "\n"
+		       "\t\tsuccess_file_write_count = %" PRId64 "\n"
+		       "\t\tlast_heart_beat_time = %s\n"
+		       "\t\tlast_source_update = %s\n"
+		       "\t\tlast_sync_update = %s\n"
+		       "\t\tlast_synced_timestamp = %s %s\n",
+		       ++k, pStorage->id, pStorage->ip_addr,
+		       szHostnamePrompt,
+		       get_storage_status_caption(pStorage->status),
+		       pStorage->domain_name, pStorage->version,
+		       formatDatetime(pStorage->join_time,
+				      "%Y-%m-%d %H:%M:%S", szJoinTime,
+				      sizeof(szJoinTime)), szUpTime,
+		       pStorage->total_mb, pStorage->free_mb,
+		       pStorage->upload_priority,
+		       pStorage->store_path_count,
+		       pStorage->subdir_count_per_path,
+		       pStorage->storage_port, pStorage->storage_http_port,
+		       pStorage->current_write_path, pStorage->src_id,
+		       pStorage->if_trunk_server,
+		       pStorageStat->connection.alloc_count,
+		       pStorageStat->connection.current_count,
+		       pStorageStat->connection.max_count,
+		       pStorageStat->total_upload_count,
+		       pStorageStat->success_upload_count,
+		       pStorageStat->total_append_count,
+		       pStorageStat->success_append_count,
+		       pStorageStat->total_modify_count,
+		       pStorageStat->success_modify_count,
+		       pStorageStat->total_truncate_count,
+		       pStorageStat->success_truncate_count,
+		       pStorageStat->total_set_meta_count,
+		       pStorageStat->success_set_meta_count,
+		       pStorageStat->total_delete_count,
+		       pStorageStat->success_delete_count,
+		       pStorageStat->total_download_count,
+		       pStorageStat->success_download_count,
+		       pStorageStat->total_get_meta_count,
+		       pStorageStat->success_get_meta_count,
+		       pStorageStat->total_create_link_count,
+		       pStorageStat->success_create_link_count,
+		       pStorageStat->total_delete_link_count,
+		       pStorageStat->success_delete_link_count,
+		       pStorageStat->total_upload_bytes,
+		       pStorageStat->success_upload_bytes,
+		       pStorageStat->total_append_bytes,
+		       pStorageStat->success_append_bytes,
+		       pStorageStat->total_modify_bytes,
+		       pStorageStat->success_modify_bytes,
+		       pStorageStat->total_download_bytes,
+		       pStorageStat->success_download_bytes,
+		       pStorageStat->total_sync_in_bytes,
+		       pStorageStat->success_sync_in_bytes,
+		       pStorageStat->total_sync_out_bytes,
+		       pStorageStat->success_sync_out_bytes,
+		       pStorageStat->total_file_open_count,
+		       pStorageStat->success_file_open_count,
+		       pStorageStat->total_file_read_count,
+		       pStorageStat->success_file_read_count,
+		       pStorageStat->total_file_write_count,
+		       pStorageStat->success_file_write_count,
+		       formatDatetime(pStorageStat->last_heart_beat_time,
+				      "%Y-%m-%d %H:%M:%S",
+				      szLastHeartBeatTime,
+				      sizeof(szLastHeartBeatTime)),
+		       formatDatetime(pStorageStat->last_source_update,
+				      "%Y-%m-%d %H:%M:%S", szSrcUpdTime,
+				      sizeof(szSrcUpdTime)),
+		       formatDatetime(pStorageStat->last_sync_update,
+				      "%Y-%m-%d %H:%M:%S", szSyncUpdTime,
+				      sizeof(szSyncUpdTime)),
+		       formatDatetime(pStorageStat->last_synced_timestamp,
+				      "%Y-%m-%d %H:%M:%S",
+				      szSyncedTimestamp,
+				      sizeof(szSyncedTimestamp)),
+		       szSyncedDelaySeconds);
+	}
+
+	return 0;
+}
+
+static int list_all_groups(ConnectionInfo * pTrackerServer,
+			   const char *group_name)
+{
+	int result;
+	int group_count;
+	FDFSGroupStat group_stats[FDFS_MAX_GROUPS];
+	FDFSGroupStat *pGroupStat;
+	FDFSGroupStat *pGroupEnd;
+	int i;
+
+	result = tracker_list_groups(pTrackerServer,
+				     group_stats, FDFS_MAX_GROUPS,
+				     &group_count);
+	if (result != 0) {
+		tracker_close_all_connections();
+		fdfs_client_destroy();
+		return result;
+	}
+
+	pGroupEnd = group_stats + group_count;
+	if (group_name == NULL) {
+		printf("group count: %d\n", group_count);
+		i = 0;
+		for (pGroupStat = group_stats; pGroupStat < pGroupEnd;
+		     pGroupStat++) {
+			printf("\nGroup %d:\n", ++i);
+			list_storages(pTrackerServer, pGroupStat);
+		}
+	} else {
+		for (pGroupStat = group_stats; pGroupStat < pGroupEnd;
+		     pGroupStat++) {
+			if (strcmp(pGroupStat->group_name, group_name) ==
+			    0) {
+				list_storages(pTrackerServer, pGroupStat);
+				break;
+			}
+		}
+	}
+
+	return 0;
+}
