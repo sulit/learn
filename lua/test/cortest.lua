@@ -5,6 +5,10 @@ coro = {}
 coro.main = function () end
 coro.current = coro.main
 
+for k,v in pairs(coro) do
+	print(k, v)
+end
+
 function coro.create(f)
 	return coroutine.wrap(function(val)
 		return nil, f(val)
@@ -46,6 +50,7 @@ function main()
 	foo1 = coro.create(foo1) --产生协程foo1
 	foo2 = coro.create(foo2) --产生协程foo2
 	local n = coro.transfer(foo1,0)
+	print(n)
 	print("1: main received value "..n)
 	n = coro.transfer(foo2,n + 10)
 	print("2: main received value "..n)
