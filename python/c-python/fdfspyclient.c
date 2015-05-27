@@ -33,7 +33,7 @@ static PyObject *fdfs_init(PyObject * self, PyObject * args)
 	int result;
 	char *conf_filename;
 	if (!PyArg_ParseTuple(args, "s", &conf_filename)) {
-		printf("usage: "FDFSPYMOD".fdfs_init(conf_filename)\n");
+		printf("usage: " FDFSPYMOD ".fdfs_init(conf_filename)\n");
 		return NULL;
 	}
 
@@ -71,7 +71,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 
 	if (!PyArg_ParseTuple
 	    (args, "sz", &local_filename, &upload_typestr)) {
-		printf("usage: "FDFSPYMOD".fdfs_upload(local_filename, upload_typestr | None)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_upload(local_filename, upload_typestr | None)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -357,7 +358,8 @@ static PyObject *fdfs_upload(PyObject * self, PyObject * args)
 	tracker_disconnect_server_ex(pStorageServer, true);
 	tracker_disconnect_server_ex(pTrackerServer, true);
 
-	return Py_BuildValue("(i, s, s, s)", result, group_name, remote_filename, file_url);
+	return Py_BuildValue("(i, s, s, s)", result, group_name,
+			     remote_filename, file_url);
 }
 
 static PyObject *fdfs_download(PyObject * self, PyObject * args)
@@ -376,7 +378,8 @@ static PyObject *fdfs_download(PyObject * self, PyObject * args)
 	if (!PyArg_ParseTuple
 	    (args, "ssz", &group_name, &remote_filename,
 	     &local_filename)) {
-		printf("usage: "FDFSPYMOD".fdfs_download(group_name, remote_filename, local_filename | None)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_download(group_name, remote_filename, local_filename | None)\n");
 		fdfs_client_destroy();
 
 		return NULL;
@@ -488,7 +491,8 @@ static PyObject *fdfs_delete(PyObject * self, PyObject * args)
 	char *remote_filename;
 
 	if (!PyArg_ParseTuple(args, "ss", &group_name, &remote_filename)) {
-		printf("usage: "FDFSPYMOD".fdfs_delete(group_name, remote_filename)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_delete(group_name, remote_filename)\n");
 		fdfs_client_destroy();
 
 		return NULL;
@@ -557,7 +561,8 @@ static PyObject *fdfs_getmeta(PyObject * self, PyObject * args)
 	char kv[1024];
 
 	if (!PyArg_ParseTuple(args, "ss", &group_name, &remote_filename)) {
-		printf("usage: "FDFSPYMOD".fdfs_getmeta(group_name, remote_filename)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_getmeta(group_name, remote_filename)\n");
 		fdfs_client_destroy();
 
 		return NULL;
@@ -606,8 +611,10 @@ static PyObject *fdfs_getmeta(PyObject * self, PyObject * args)
 		for (i = 0; i < meta_count; i++) {
 			printf("%s=%s\n",
 			       pMetaList[i].name, pMetaList[i].value);
-			snprintf(kv, sizeof(kv), "%s=%s", pMetaList[i].name, pMetaList[i].value);
-			PyTuple_SetItem(metatable, i, PyString_FromString(kv));
+			snprintf(kv, sizeof(kv), "%s=%s",
+				 pMetaList[i].name, pMetaList[i].value);
+			PyTuple_SetItem(metatable, i,
+					PyString_FromString(kv));
 		}
 
 		free(pMetaList);
@@ -620,7 +627,7 @@ static PyObject *fdfs_getmeta(PyObject * self, PyObject * args)
 	tracker_disconnect_server_ex(pStorageServer, true);
 	tracker_disconnect_server_ex(pTrackerServer, true);
 
-	return Py_BuildValue("iO", result, metatable);
+	return Py_BuildValue("iiO", result, meta_count, metatable);
 }
 
 static PyObject *fdfs_setmeta(PyObject * self, PyObject * args)
@@ -639,7 +646,8 @@ static PyObject *fdfs_setmeta(PyObject * self, PyObject * args)
 	if (!PyArg_ParseTuple
 	    (args, "ssss", &group_name, &remote_filename, &op_flag,
 	     &meta_buff)) {
-		printf("usage: "FDFSPYMOD".fdfs_setmeta(group_name, remote_filename,"
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_setmeta(group_name, remote_filename,"
 		       " op_flag, metadata_list)\n"
 		       "\top_flag: %c for overwrite, " "%c for merge\n"
 		       "\tmetadata_list: name1=value1,"
@@ -723,7 +731,8 @@ static PyObject *fdfs_query_servers(PyObject * self, PyObject * args)
 	PyObject *storageServertable = NULL;
 
 	if (!PyArg_ParseTuple(args, "ss", &group_name, &remote_filename)) {
-		printf("usage: "FDFSPYMOD".fdfs_query_servers(group_name, remote_filename)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_query_servers(group_name, remote_filename)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -753,8 +762,12 @@ static PyObject *fdfs_query_servers(PyObject * self, PyObject * args)
 			printf("\t%s:%d\n",
 			       storageServers[i].ip_addr,
 			       storageServers[i].port);
-			snprintf(ip_port, sizeof(ip_port), "ip:%s, port:%d", storageServers[i].ip_addr, storageServers[i].port);
-			PyTuple_SetItem(storageServertable, i, PyString_FromString(ip_port));
+			snprintf(ip_port, sizeof(ip_port),
+				 "ip:%s, port:%d",
+				 storageServers[i].ip_addr,
+				 storageServers[i].port);
+			PyTuple_SetItem(storageServertable, i,
+					PyString_FromString(ip_port));
 		}
 		printf("\n");
 	}
@@ -762,7 +775,8 @@ static PyObject *fdfs_query_servers(PyObject * self, PyObject * args)
 	tracker_disconnect_server_ex(pTrackerServer, result != 0);
 	fdfs_client_destroy();
 
-	return Py_BuildValue("iiO", result, server_count, storageServertable);
+	return Py_BuildValue("iiO", result, server_count,
+			     storageServertable);
 }
 
 static PyObject *fdfs_append_file(PyObject * self, PyObject * args)
@@ -774,8 +788,9 @@ static PyObject *fdfs_append_file(PyObject * self, PyObject * args)
 
 	if (!PyArg_ParseTuple
 	    (args, "ss", &appender_file_id, &local_filename)) {
-		printf("usage: "FDFSPYMOD".fdfs_append_file(append_file_id, local_filename)\n"
-		"\tappend_file_id:groupname+remote_filename(ex:group1/M00/00/00/wKj_gVVjzBOAMy5EAAAD6VEwZK86469523)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_append_file(append_file_id, local_filename)\n"
+		       "\tappend_file_id:groupname+remote_filename(ex:group1/M00/00/00/wKj_gVVjzBOAMy5EAAAD6VEwZK86469523)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -810,8 +825,8 @@ static PyObject *fdfs_file_info(PyObject * self, PyObject * args)
 	char buff[1024];
 
 	if (!PyArg_ParseTuple(args, "s", &file_id)) {
-		printf("usage: "FDFSPYMOD".fdfs_file_info(file_id)\n"
-		"\tappend_file_id:groupname+remote_filename(ex:group1/M00/00/00/wKj_gVVjzBOAMy5EAAAD6VEwZK86469523)\n");
+		printf("usage: " FDFSPYMOD ".fdfs_file_info(file_id)\n"
+		       "\tappend_file_id:groupname+remote_filename(ex:group1/M00/00/00/wKj_gVVjzBOAMy5EAAAD6VEwZK86469523)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -828,20 +843,28 @@ static PyObject *fdfs_file_info(PyObject * self, PyObject * args)
 		char szDatetime[32];
 
 		fileinfotable = PyTuple_New(5);
-		snprintf(buff, sizeof(buff), "source storageid: %d", file_info.source_id);
-		PyTuple_SetItem(fileinfotable, 0, PyString_FromString(buff));
-		snprintf(buff, sizeof(buff), "source ip address: %s", file_info.source_ip_addr);
-		PyTuple_SetItem(fileinfotable, 1, PyString_FromString(buff));
+		snprintf(buff, sizeof(buff), "source storageid: %d",
+			 file_info.source_id);
+		PyTuple_SetItem(fileinfotable, 0,
+				PyString_FromString(buff));
+		snprintf(buff, sizeof(buff), "source ip address: %s",
+			 file_info.source_ip_addr);
+		PyTuple_SetItem(fileinfotable, 1,
+				PyString_FromString(buff));
 		snprintf(buff, sizeof(buff), "file create timestamp: %s",
-		       			formatDatetime(file_info.create_timestamp,
-				      	"%Y-%m-%d %H:%M:%S", szDatetime,
-				      	sizeof(szDatetime)));
-		PyTuple_SetItem(fileinfotable, 2, PyString_FromString(buff));
-		snprintf(buff, sizeof(buff), "file size: %" PRId64 "\n", file_info.file_size);
-		PyTuple_SetItem(fileinfotable, 3, PyString_FromString(buff));
+			 formatDatetime(file_info.create_timestamp,
+					"%Y-%m-%d %H:%M:%S", szDatetime,
+					sizeof(szDatetime)));
+		PyTuple_SetItem(fileinfotable, 2,
+				PyString_FromString(buff));
+		snprintf(buff, sizeof(buff), "file size: %" PRId64 "\n",
+			 file_info.file_size);
+		PyTuple_SetItem(fileinfotable, 3,
+				PyString_FromString(buff));
 		snprintf(buff, sizeof(buff), "file crc32: %u (0x%08X)\n",
-		       		file_info.crc32, file_info.crc32);
-		PyTuple_SetItem(fileinfotable, 4, PyString_FromString(buff));
+			 file_info.crc32, file_info.crc32);
+		PyTuple_SetItem(fileinfotable, 4,
+				PyString_FromString(buff));
 		printf("source storage id: %d\n", file_info.source_id);
 		printf("source ip address: %s\n",
 		       file_info.source_ip_addr);
@@ -870,7 +893,8 @@ static PyObject *fdfs_upload_append(PyObject * self, PyObject * args)
 	char file_id[128];
 
 	if (!PyArg_ParseTuple(args, "s", &local_filename)) {
-		printf("usage: "FDFSPYMOD".fdfs_upload_append(local_filename)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_upload_append(local_filename)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -926,7 +950,8 @@ static PyObject *fdfs_list_all_groups(PyObject * self, PyObject * args)
 	char *group_name;
 
 	if (!PyArg_ParseTuple(args, "zz", &tracker_server, &group_name)) {
-		printf("usage: "FDFSPYMOD".fdfs_list_all_groups(tracker_server | None, group_name | None)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_list_all_groups(tracker_server | None, group_name | None)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -1000,7 +1025,8 @@ static PyObject *fdfs_delete_group(PyObject * self, PyObject * args)
 	char *group_name;
 
 	if (!PyArg_ParseTuple(args, "zs", &tracker_server, &group_name)) {
-		printf("usage: "FDFSPYMOD".fdfs_delete_group(tracker_server | None, group_name)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_delete_group(tracker_server | None, group_name)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -1078,7 +1104,8 @@ static PyObject *fdfs_delete_server(PyObject * self, PyObject * args)
 
 	if (!PyArg_ParseTuple
 	    (args, "zss", &tracker_server, &group_name, &storage_id)) {
-		printf("usage: "FDFSPYMOD".fdfs_delete_server(tracker_server | None, group_name, storage_id)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_delete_server(tracker_server | None, group_name, storage_id)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
@@ -1161,7 +1188,8 @@ static PyObject *fdfs_set_trunk_server(PyObject * self, PyObject * args)
 
 	if (!PyArg_ParseTuple
 	    (args, "zss", &tracker_server, &group_name, &storage_id)) {
-		printf("usage: "FDFSPYMOD".fdfs_set_trunk_server(tracker_server | None, group_name, storage_id)\n");
+		printf("usage: " FDFSPYMOD
+		       ".fdfs_set_trunk_server(tracker_server | None, group_name, storage_id)\n");
 		fdfs_client_destroy();
 		return NULL;
 	}
