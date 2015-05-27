@@ -44,27 +44,27 @@
 
 9. 这个网址的有些文章不错
 
-[http://dirlt.com](http://dirlt.com)
+  [http://dirlt.com](http://dirlt.com)
 
 10. qemu教程
 
-`#qemu-img create windows.img 2G`
+  `#qemu-img create windows.img 2G`
 
-> 这个就是创建虚拟机磁盘，2G大小
+  > 这个就是创建虚拟机磁盘，2G大小
 
-`#qemu -hda windows.img -cdrom /dev/acd0 -boot d -m 512 -enable-audio
-\-localtime`
+  `#qemu -hda windows.img -cdrom /dev/acd0 -boot d -m 512 -enable-audio
+  \-localtime`
 
-`-hda` 是指定硬盘
+  `-hda` 是指定硬盘
 
-`-cdrom` 指定使用光驱，这个参数后面必须要跟个文件名，可以是物理光驱/dev/hda，可
-以使用ISO文件，为文件的路径
+  `-cdrom` 指定使用光驱，这个参数后面必须要跟个文件名，可以是物理光驱/dev/hda，可
+  以使用ISO文件，为文件的路径
 
-`-m` 是指定虚拟机使用的内存大小，如512M
+  `-m` 是指定虚拟机使用的内存大小，如512M
 
-`-boot` 指定虚拟机启动用的设备，-boot后可以选择的参数是 a ,c ,d .其中a 是指从软
-盘启动，c 就是用硬盘启动，d 当然就是光驱启动了。
+  `-boot` 指定虚拟机启动用的设备，-boot后可以选择的参数是 a ,c ,d .其中a 是指从软
+  盘启动，c 就是用硬盘启动，d 当然就是光驱启动了。
 
-`-enable-audio`
+  `-enable-audio`
 
-`-localtime` 使用实际主板bios上的时间。
+  `-localtime` 使用实际主板bios上的时间。
