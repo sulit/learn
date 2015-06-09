@@ -78,3 +78,16 @@
 12. latex有机会一定要学习下，感觉用处太大了
 
 13. os的学习，以及kali的学习
+
+14. gnome-terminal: keep track of directory in new tab解决办法
+
+  q:I'm on Arch linux, and when I open a new terminal tab, it always goes to
+  $HOME. How can I make it so that when I open a new tab, it opens the shell
+  in the directory I was in previously?
+
+  a:There is a bug related to this issue
+  All you need to do is add the following line to your .bashrc or .zshrc:
+  ```
+  . /etc/profile.d/vte.sh
+  ```
+  and exits if you are not.

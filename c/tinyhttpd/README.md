@@ -20,6 +20,23 @@ tinyhttpd 微型服务器，适合于研究http服务器的原理，不能用作
 
 #### 分析
 
+整个过程用到的函数
+
+```
+void accept_request(int);
+void bad_request(int);
+void cat(int, FILE *);
+void cannot_execute(int);
+void error_die(const char *);
+void execute_cgi(int, const char *, const char *, const char *);
+int get_line(int, char *, int);
+void headers(int, const char *);
+void not_found(int);
+void serve_file(int, const char *);
+int startup(u_short *);
+void unimplemented(int);
+```
+
 * main函数
 
 ```
@@ -219,4 +236,18 @@ if (listen(httpd, 5) < 0)
 return (httpd);
 ```
 
-返回服务器端套接字接口
+返回服务器端套接字描述符
+
+* error_die
+
+```
+void error_die(const char *sc)
+{
+	perror(sc);
+	exit(1);
+}
+```
+
+打印错误信息到标准错误输出，并退出程序。
+
+* 
