@@ -29,3 +29,7 @@
 #### 6. emacs
 
 [emacs](emacs/README.md)
+
+#### 7. debian
+
+[debian](debian/README.md)

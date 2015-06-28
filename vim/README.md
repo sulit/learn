@@ -14,4 +14,12 @@
 vim
 =========
 
-1. help doc
+1. 自带的help文档
+```
+:help
+```
+
+2. vimtutor教程
+```
+$vimtutor
+```
