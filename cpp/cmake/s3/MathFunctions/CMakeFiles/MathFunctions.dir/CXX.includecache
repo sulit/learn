@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sulit/gitsrc/learn/cpp/s3/MathFunctions/MathFunctions.h
+
+/home/sulit/gitsrc/learn/cpp/s3/MathFunctions/mysqrt.cxx
+stdio.h
+-
+MathFunctions.h
+/home/sulit/gitsrc/learn/cpp/s3/MathFunctions/MathFunctions.h
+

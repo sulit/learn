@@ -91,3 +91,6 @@
   . /etc/profile.d/vte.sh
   ```
   and exits if you are not.
+
+15. kali linux发行版现在也是不错的选择，但是默认安装的东西确实多了点，基于
+debian，现在滚动更新。桌面什么的都还不错，可以试试。
