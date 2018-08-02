@@ -4,36 +4,36 @@
 
 - FreeBSD
 
-[bhyve](FreeBSD/bhyve.md)
+   [bhyve](FreeBSD/bhyve.md)
 
 - learnlog
 
-[learnlog](learnlog.md)
+   [learnlog](learnlog.md)
 
 - C
 
-[C](c/README.md)
+   [C](c/README.md)
 
 - python
 
-[python](python/README.md)
+   [python](python/README.md)
 
 - lua
 
-[lua](lua/README.md)
+   [lua](lua/README.md)
 
 - vim
 
-[vim](vim/README.md)
+   [vim](vim/README.md)
 
 - htmljs
 
-[htmljs](htmljs/README.md)
+   [htmljs](htmljs/README.md)
 
 - emacs
 
-[emacs](emacs/README.md)
+   [emacs](emacs/README.md)
 
 - debian
 
-[debian](debian/README.md)
+   [debian](debian/README.md)
