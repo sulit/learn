@@ -6,6 +6,8 @@
 
    [bhyve](FreeBSD/bhyve.md)
 
+   [zfs](FreeBSD/zfs.md)
+
 - learnlog
 
    [learnlog](learnlog.md)
